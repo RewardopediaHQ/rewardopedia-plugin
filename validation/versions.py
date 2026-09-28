@@ -64,6 +64,27 @@ def changelog_sections(text: str) -> dict[str, str]:
     return {m.group("version"): m.group("rest") for m in RELEASE_HEADING.finditer(text)}
 
 
+def release_notes(changelog: str, version: str) -> str:
+    """Return the body of the dated ``## [version]`` section, for release notes.
+
+    Raises ``ValueError`` when the section is missing, undated or empty.
+    """
+    headings = list(RELEASE_HEADING.finditer(changelog))
+    for index, heading in enumerate(headings):
+        if heading.group("version") != version:
+            continue
+        if not DATED.match(heading.group("rest")):
+            raise ValueError(f"release '{version}' needs ' - YYYY-MM-DD'")
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(changelog)
+        body = changelog[heading.end() : end].strip()
+        # Drop trailing link reference definitions shared by the whole changelog.
+        body = re.sub(r"(?:\n\[[^\]]+\]: \S+)+$", "", body).strip()
+        if not body:
+            raise ValueError(f"release '{version}' has no changelog entries")
+        return body + "\n"
+    raise ValueError(f"CHANGELOG.md has no '## [{version}] - YYYY-MM-DD' section")
+
+
 def check(root: Path, ref: str | None = None) -> list[Finding]:
     if ref is None:
         ref = os.environ.get("GITHUB_REF", "")

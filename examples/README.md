@@ -10,7 +10,11 @@ the server is live, its advertised tool schemas are authoritative.
 | [needs-input.json](needs-input.json) | No supported goal, so the result asks follow-up questions |
 | [shortlist-with-saved-context.json](shortlist-with-saved-context.json) | Disclosure notice, an explicit wallet fact, a fee constraint with an unknown fee, and conditions kept attached |
 | [compare-without-a-winner.json](compare-without-a-winner.json) | Different reward currencies, an unknown fee and no universal winner |
-| [correct-and-forget.json](correct-and-forget.json) | Spanish (`es-US`) inspection, a correction and confirmed deletion |
+| [tied-candidates-without-a-winner.json](tied-candidates-without-a-winner.json) | Tied candidates in identifier order, presented without a "best" pick, and an unknown cap |
+| [correct-and-forget.json](correct-and-forget.json) | Spanish (`es-US`) inspection, a correction, confirmed deletion and honest backup wording |
+
+Each example gives the request-history notice before its first Rewardopedia
+call, as the skill requires.
 
 CI validates each file against [`schemas/example.schema.json`](../schemas/example.schema.json)
 and rejects URLs outside reserved example domains. Keep new examples synthetic:

@@ -98,10 +98,11 @@ Return a qualitative shortlist for a supported goal. Requires `cards:read` and
 - **Goals.** Supported goals are published in the tool's input schema. The
   planned v1 vocabulary is `cash_back`, `travel_rewards`, `dining`,
   `groceries`, `gas`, `hotel_loyalty`, `airline_loyalty` and
-  `business_spending`; request order is priority. Unsupported goals (for
-  example credit building, balance transfers, introductory APR, approval odds
-  or dollar savings) and free-form prose are not interpreted: the result is
-  `needs_input` with follow-up questions.
+  `business_spending`; request order is priority. Unsupported goal tokens
+  (`credit_building`, `balance_transfer`, `intro_apr`, `approval_odds`,
+  `dollar_savings` or any other token) are not interpreted: the result is
+  `needs_input` with follow-up questions. Free-form prose is not a goal token
+  and is rejected as invalid input.
 - **Hard constraints** are applied first: a maximum annual fee in US dollars,
   requiring no foreign transaction fee, and personal or business card type. A
   card whose relevant fact is unknown does not pass the constraint.
@@ -110,7 +111,9 @@ Return a qualitative shortlist for a supported goal. Requires `cards:read` and
   result is marked `wallet_baseline_incomplete`.
 - **Ordering.** Matches to the prioritized goals first, then known
   complementary benefits, then a stable identifier for ties. The order is
-  deterministic for the same inputs and context version.
+  deterministic for the same inputs and context version. It is a methodology
+  order, not a verdict: the first candidate is not "the best", and tied
+  candidates are ordered by identifier.
 - **Output.** Three candidates by default and never more than five, each with
   supported facts, source references, publication identity, material
   limitations and follow-up questions, plus the methodology and context versions
@@ -148,4 +151,5 @@ retained inputs, provenance and derived recommendation payloads that could
 reconstruct the forgotten information, and prevents earlier retried requests
 from recreating it. Destructive and idempotent: repeating the same deletion
 has no further effect. Confirm the scope with the user first. Removal from
-service backups follows the limits published in the privacy guide.
+service backups is not immediate; its limits will be published in the privacy
+guide before release.

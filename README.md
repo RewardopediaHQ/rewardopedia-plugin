@@ -7,10 +7,11 @@
 > released. The package version is `0.1.0-dev`.
 
 This repository is the public, MIT-licensed package that connects AI
-assistants to Rewardopedia's remote MCP server. It lets an assistant search and
+assistants to Rewardopedia's remote MCP server at
+`https://mcp.rewardopedia.com/mcp`. It lets an assistant search and
 compare US credit cards using published, source-referenced facts, and build a
-qualitative shortlist for a goal you choose, optionally using context you ask
-it to remember.
+qualitative shortlist for a goal you choose, optionally using facts saved to
+your Rewardopedia account.
 
 It contains manifests, an assistant skill, client setup guides, synthetic
 examples and validation. It contains no server code and no customer data.
@@ -38,15 +39,24 @@ Scope and limits:
 
 ## Before you use it: privacy and memory
 
-Rewardopedia remembers only what you explicitly ask your assistant to save:
-cards you hold, spending, goals, preferences, constraints and temporary plans,
-plus a sanitized history of tool requests. Saved context belongs to your
-Rewardopedia account and is shared by every assistant you connect with that
-account.
+Rewardopedia keeps two kinds of data in your Rewardopedia account:
+
+- **Facts you state explicitly:** cards you say you hold, spending, goals,
+  preferences, constraints and temporary plans. Your assistant saves these when
+  you state them. Rewardopedia's instructions tell it to explain what is saved
+  first and not to save anything you ask it not to. Searches, comparisons and
+  hypothetical questions never become facts.
+- **A sanitized history of every Rewardopedia tool request.** This is recorded
+  automatically, even if you never save a fact. It includes card searches and
+  comparisons.
+
+Both belong to your Rewardopedia account and are shared by every assistant you
+connect with that account.
 
 - Never share card numbers, security codes, account numbers, government
   identifiers, passwords or other credentials.
-- Saved context is kept until you delete it or your account.
+- Saved facts and request history are kept until you delete them or your
+  account.
 - Ask your assistant what Rewardopedia remembers at any time, and ask it to
   forget some or all of it. Deletion is permanent in the live service; backup
   retention limits will be published before release.
@@ -91,6 +101,7 @@ listed in [docs/sources.md](docs/sources.md).
 | `docs/` | Privacy guide, client guides, compatibility table and sources |
 | `examples/` | Synthetic example conversations |
 | `schemas/`, `validation/`, `scripts/`, `tests/` | Validation used locally and in CI |
+| `.github/workflows/` | CI validation, and the release workflow that publishes a tagged version |
 
 ## Validate locally
 

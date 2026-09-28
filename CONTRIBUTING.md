@@ -42,15 +42,58 @@ assistants and users read.
 CI runs the same checks, an external link check, a full-history secret scan,
 actionlint and Claude Code's `claude plugin validate --strict`.
 
+The secret scan is a safety net, not a guarantee. Never paste a credential
+into any file, even temporarily.
+
+Tests must set up the state they assert on (versions, changelog,
+compatibility rows, the README banner) rather than rely on the repository's
+current state. `tests/test_lifecycle.py` reruns the validators and the whole
+suite after recording a verification, launching the service, tagging a release
+and starting the next development cycle, so a test that only passes before
+release fails there.
+
 ## Versions and releases
 
 - During development every manifest carries the same `X.Y.Z-dev` version.
   CI fails if manifests disagree.
 - Only Rewardopedia maintainers cut releases. A release changes every
-  manifest to `X.Y.Z`, moves the changelog entries under
-  `## [X.Y.Z] - YYYY-MM-DD`, and is tagged `vX.Y.Z` on that commit. CI fails a
-  tag that does not match the manifests or that points at a `-dev` version.
-- `v0.1.0` waits for the live service and verified client acceptance.
+  manifest to `X.Y.Z` and moves the changelog entries under
+  `## [X.Y.Z] - YYYY-MM-DD` in one pull request. After it merges, a maintainer
+  tags that commit `vX.Y.Z`.
+- The tag starts [the release workflow](.github/workflows/release.yml). It
+  reruns every validation check on the tagged commit and stops if any fails,
+  including a tag that does not match the manifests or that points at a `-dev`
+  version. When the checks pass, it publishes a GitHub release with that
+  version's changelog section, `.tar.gz` and `.zip` archives, and a
+  `SHA256SUMS` file. Check the release notes locally with
+  `uv run python scripts/release_notes.py X.Y.Z`.
+- After a release, start the next cycle by bumping every manifest to the next
+  `-dev` version.
+
+### Launching the service
+
+The launch pull request removes the README's **NOT YET LIVE** banner and sets
+`SERVICE_LIVE = True` in [validation/constants.py](validation/constants.py).
+While `SERVICE_LIVE` is `False`, CI requires the banner and skips link checks
+for `mcp.rewardopedia.com`. Once it is `True`, CI rejects the banner and checks
+that host like any other link. Update the "not live yet" wording in the guides
+in the same pull request.
+
+### Before v0.1.0
+
+`v0.1.0` waits for the live service and verified client acceptance. These items
+are still open:
+
+- the live service at `https://mcp.rewardopedia.com/mcp` (see
+  [Launching the service](#launching-the-service));
+- verified rows for all four consumer clients in
+  [docs/compatibility.md](docs/compatibility.md);
+- published OAuth client values for the Grok and Perplexity guides;
+- published backup-retention limits and account-deletion instructions in the
+  [privacy guide](docs/privacy-and-memory.md);
+- branding: owner-supplied logo and icon files in `assets/`, the terms that
+  apply to them, and the matching `logo`, `composerIcon` and `brandColor`
+  fields in `plugin.json`. None are included yet.
 
 ## Updating vendored schemas
 

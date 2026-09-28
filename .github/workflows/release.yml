@@ -1,0 +1,72 @@
+name: release
+
+# A maintainer pushes a vX.Y.Z tag on the release commit (see CONTRIBUTING.md).
+# Every validate.yml check must pass for the tagged commit before the GitHub
+# release, its CHANGELOG notes and the versioned archives are published.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  UV_VERSION: "0.12.3"
+
+jobs:
+  validate:
+    name: Validate the tagged commit
+    uses: ./.github/workflows/validate.yml
+
+  publish:
+    name: Publish the GitHub release
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the tagged commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install locked dependencies
+        run: uv sync --frozen
+
+      - name: Check the tag matches the manifests and changelog
+        run: uv run python scripts/validate.py versions --ref "$GITHUB_REF"
+
+      - name: Build release notes and archives
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          name="rewardopedia-plugin-${version}"
+          mkdir dist
+          uv run python scripts/release_notes.py "$version" > dist/release-notes.md
+          printf '\nBuilt from commit %s. Verify the archives with SHA256SUMS.\n' \
+            "$GITHUB_SHA" >> dist/release-notes.md
+          git archive --format=tar.gz --prefix="${name}/" -o "dist/${name}.tar.gz" "$GITHUB_SHA"
+          git archive --format=zip --prefix="${name}/" -o "dist/${name}.zip" "$GITHUB_SHA"
+          (cd dist && sha256sum "${name}.tar.gz" "${name}.zip" > SHA256SUMS)
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          name="rewardopedia-plugin-${version}"
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file dist/release-notes.md \
+            "dist/${name}.tar.gz" "dist/${name}.zip" dist/SHA256SUMS

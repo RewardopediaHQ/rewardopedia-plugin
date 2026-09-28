@@ -4,7 +4,16 @@ from __future__ import annotations
 
 PLUGIN_NAME = "rewardopedia"
 MCP_SERVER_NAME = "rewardopedia"
-CANONICAL_ENDPOINT = "https://mcp.rewardopedia.com/mcp"
+SERVICE_HOST = "mcp.rewardopedia.com"
+CANONICAL_ENDPOINT = f"https://{SERVICE_HOST}/mcp"
+# Rewardopedia's own domain; any other host naming Rewardopedia is a lookalike.
+BRAND_DOMAIN = "rewardopedia.com"
+
+# Set to True in the launch pull request that removes the README's NOT YET LIVE
+# banner (see CONTRIBUTING.md). While False, the README must carry the banner
+# and external link checks skip the not-yet-reachable service host.
+SERVICE_LIVE = False
+
 REPOSITORY_URL = "https://github.com/RewardopediaHQ/rewardopedia-plugin"
 LICENSE_ID = "MIT"
 
@@ -30,7 +39,7 @@ VERSIONED_MANIFESTS = ("plugin.json", ".claude-plugin/plugin.json")
 MARKETPLACE = ".claude-plugin/marketplace.json"
 
 # Hosts that are intentionally not reachable yet; external link checks skip them.
-NOT_YET_LIVE_HOSTS = frozenset({"mcp.rewardopedia.com"})
+NOT_YET_LIVE_HOSTS: frozenset[str] = frozenset() if SERVICE_LIVE else frozenset({SERVICE_HOST})
 
 # Consumer clients that must each have a guide and a compatibility row.
 CONSUMER_CLIENTS = ("ChatGPT", "Claude", "Grok", "Perplexity")

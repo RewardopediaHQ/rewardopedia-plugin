@@ -1,4 +1,9 @@
-"""Fixtures: an isolated copy of the repository that tests can mutate."""
+"""Fixtures: an isolated copy of the repository that tests can mutate.
+
+Tests must set up the state they assert on (versions, changelog, compatibility
+rows, README banner) instead of relying on the repository's current lifecycle
+state; tests/test_lifecycle.py reruns the suite after simulated maintainer steps.
+"""
 
 from __future__ import annotations
 
@@ -10,17 +15,22 @@ from typing import Any
 
 import pytest
 
-from validation.common import REPO_ROOT, SKIPPED_DIRS, Finding
+from validation.common import REPO_ROOT, Finding, repo_files
 
-IGNORED = shutil.ignore_patterns(*SKIPPED_DIRS)
+
+def copy_repository(source: Path, target: Path) -> Path:
+    """Copy the files validation sees in ``source`` (tracked and unignored) to ``target``."""
+    for relative in repo_files(source):
+        destination = target / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source / relative, destination)
+    return target
 
 
 @pytest.fixture
 def repo(tmp_path: Path) -> Path:
     """A copy of the repository outside Git (files are discovered by walking)."""
-    target = tmp_path / "repo"
-    shutil.copytree(REPO_ROOT, target, ignore=IGNORED)
-    return target
+    return copy_repository(REPO_ROOT, tmp_path / "repo")
 
 
 def read_json(root: Path, relative: str) -> Any:
@@ -28,7 +38,13 @@ def read_json(root: Path, relative: str) -> Any:
 
 
 def write_json(root: Path, relative: str, data: Any) -> None:
-    (root / relative).write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    write_text(root, relative, json.dumps(data, indent=2) + "\n")
+
+
+def write_text(root: Path, relative: str, text: str) -> None:
+    path = root / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
 
 
 def edit_json(root: Path, relative: str, change: Callable[[Any], None]) -> None:

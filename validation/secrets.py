@@ -29,6 +29,7 @@ PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Slack token", re.compile(r"\bxox[abposr]-[A-Za-z0-9-]{10,}")),
     ("secret or restricted key", re.compile(r"\b[rs]k_(?:live|test)_[A-Za-z0-9]{16,}")),
     ("Google API key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b")),
+    ("Supabase secret key", re.compile(r"\bsb_secret_[A-Za-z0-9_-]{16,}")),
     (
         "JSON Web Token",
         re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}"),
@@ -40,13 +41,29 @@ PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("credentials in URL", re.compile(r"\b[a-z][a-z0-9+.-]*://[^/\s:@\"'<>]+:[^/\s@\"'<>]+@")),
 )
 
+# A credential-like name, then ':', '=' or a Markdown table cell break, then a
+# quoted, code-formatted or unquoted value. The name may be an identifier ending
+# in a sensitive word (MCP_SERVICE_KEY, client_secret, export PASSWORD) or
+# prose, including Markdown emphasis ("**Client secret:** `...`"). Values stop
+# at whitespace, quotes and code punctuation, so calls such as
+# os.environ.get(...) are not values.
+SENSITIVE_NAME = r"(?:apikey|secret|key|token|password|passwd|pwd|passphrase|credential)s?"
+VALUE_CHARS = r"[^\s\"'`<>()\[\]{},;*|]"
 ASSIGNMENT = re.compile(
-    r"(?i)\b(?:api[_-]?key|client[_-]?secret|secret(?:[_-]?key)?|password|passwd|"
-    r"access[_-]?token|refresh[_-]?token|auth[_-]?token|token)\b[\"']?\s*[:=]\s*[\"']"
-    r"(?P<value>[^\"'\s]{12,})[\"']"
+    r"(?i)(?<![A-Za-z0-9])(?:[A-Za-z0-9]+[_. -])*" + SENSITIVE_NAME + r"(?![A-Za-z0-9])"
+    r"[\"'*_]{0,3}\s*[:=|]\s*[*_]{0,3}\s*[\"'`]?"
+    r"(?P<value>" + VALUE_CHARS + r"{12,})(?!" + VALUE_CHARS + r"|[({])"
 )
 PLACEHOLDER = re.compile(
     r"(?i)(^<.*>$|\$\{.*\}|^\$[A-Z_]+$|your[_-]|example|placeholder|x{6,}|\*{4,})"
+)
+# Values that read as words or code references rather than generated
+# credentials: "expires-after-an-hour", "IndexNavActive", "process.env.API_TOKEN",
+# "STRAPI_TOKEN!".
+NOT_A_CREDENTIAL = re.compile(
+    r"^(?:(?:[A-Z]?[a-z]+)(?:[-_.]?[A-Z]?[a-z]+)*"
+    r"|[A-Za-z_$][\w$]*(?:\.[\w$]+)+!?"
+    r"|[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+!?)$"
 )
 CARD_CANDIDATE = re.compile(r"(?<![\w.-])(?:\d[ -]?){12,18}\d(?![\w.-])")
 SENSITIVE_FILENAMES = re.compile(
@@ -80,7 +97,11 @@ def scan_line(line: str) -> Iterator[str]:
             yield label
     for match in ASSIGNMENT.finditer(line):
         value = match.group("value")
-        if not PLACEHOLDER.search(value) and shannon_entropy(value) >= 3.5:
+        if (
+            not PLACEHOLDER.search(value)
+            and not NOT_A_CREDENTIAL.match(value)
+            and shannon_entropy(value) >= 3.5
+        ):
             yield "hard-coded credential"
     for match in CARD_CANDIDATE.finditer(line):
         digits = re.sub(r"\D", "", match.group(0))

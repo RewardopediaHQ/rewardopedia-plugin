@@ -92,9 +92,23 @@ def test_not_yet_live_and_example_hosts_are_skipped(monkeypatch: pytest.MonkeyPa
         raise AssertionError(f"should not request {url}")
 
     monkeypatch.setattr(links, "probe", fail)
+    monkeypatch.setattr(links, "NOT_YET_LIVE_HOSTS", frozenset({"mcp.rewardopedia.com"}))
     urls = {
         **_external("https://mcp.rewardopedia.com/mcp"),
         **_external("https://issuer.example/cards"),
         **_external("https://github.com/RewardopediaHQ/rewardopedia-plugin"),
     }
     assert links.check_external(urls) == []
+
+
+def test_live_service_host_is_checked(monkeypatch: pytest.MonkeyPatch) -> None:
+    requested: list[str] = []
+
+    def record(url: str) -> tuple[int | None, str | None]:
+        requested.append(url)
+        return 404, None
+
+    monkeypatch.setattr(links, "probe", record)
+    monkeypatch.setattr(links, "NOT_YET_LIVE_HOSTS", frozenset())
+    assert errors(links.check_external(_external("https://mcp.rewardopedia.com/mcp")))
+    assert requested == ["https://mcp.rewardopedia.com/mcp"]

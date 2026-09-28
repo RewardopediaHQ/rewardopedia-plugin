@@ -5,6 +5,7 @@
   "locale": "en-US",
   "market": "US",
   "demonstrates": [
+    "The assistant explains request history before the first Rewardopedia call.",
     "The requested order is preserved.",
     "Different reward currencies are not treated as equal money.",
     "An unknown fee stays unknown instead of becoming zero.",
@@ -14,6 +15,10 @@
     {
       "actor": "user",
       "text": "Compare the Example Travel Card and the Example Cash Card for me."
+    },
+    {
+      "actor": "assistant",
+      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request, including searches and comparisons, in your Rewardopedia account until you delete it. It saves facts you tell me, such as cards you hold, but I won't save anything you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time."
     },
     {
       "actor": "tool_call",

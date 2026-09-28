@@ -24,6 +24,13 @@ Grok or Perplexity) keeps your conversation under its own privacy terms.
 | Provenance | Which request saved a fact, when, and what it replaced | Every saved change |
 | Sanitized request history | Tool name, sanitized inputs, outcome, context version, recommendation references | Every authenticated, validated tool call, including ones that fail for business reasons |
 
+Facts are saved when you state them explicitly. Rewardopedia's instructions tell
+your assistant to explain what is saved before its first Rewardopedia request
+in a conversation, and not to save anything you ask it not to. The request
+history is different: it is recorded automatically for every Rewardopedia tool
+request, including card searches and comparisons, even if you never save a
+fact.
+
 Searching for or comparing a card records interest only. It never records that
 you hold the card. Hypothetical questions are not saved as facts.
 

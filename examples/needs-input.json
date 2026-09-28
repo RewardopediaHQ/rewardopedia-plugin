@@ -5,6 +5,7 @@
   "locale": "en-US",
   "market": "US",
   "demonstrates": [
+    "The assistant explains request history before the first Rewardopedia call.",
     "The assistant does not guess a goal from prose.",
     "needs_input is a distinct outcome with follow-up questions."
   ],
@@ -12,6 +13,10 @@
     {
       "actor": "user",
       "text": "What's the best credit card?"
+    },
+    {
+      "actor": "assistant",
+      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request, including searches and comparisons, in your Rewardopedia account until you delete it. It saves facts you tell me, such as cards you hold, but I won't save anything you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time."
     },
     {
       "actor": "tool_call",

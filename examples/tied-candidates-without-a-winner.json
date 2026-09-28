@@ -1,0 +1,98 @@
+{
+  "synthetic": true,
+  "title": "Tied candidates: the returned order is not a verdict",
+  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "locale": "en-US",
+  "market": "US",
+  "demonstrates": [
+    "The assistant explains request history before the first Rewardopedia call.",
+    "A clearly named goal and constraints are mapped to structured values, and the assistant says which it used.",
+    "Candidates that match equally are ordered by identifier; the first is not called the best.",
+    "An unknown cap stays unknown instead of becoming 'no cap'.",
+    "Cash back and points are not treated as equal money."
+  ],
+  "steps": [
+    {
+      "actor": "user",
+      "text": "I want a personal card for dining with no annual fee. What should I get?"
+    },
+    {
+      "actor": "assistant",
+      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request in your Rewardopedia account until you delete it, and it saves facts you tell me unless you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time. I'll search with the dining goal, personal cards only, and a $0 annual fee limit."
+    },
+    {
+      "actor": "tool_call",
+      "tool": "recommend_cards",
+      "arguments": {
+        "locale": "en-US",
+        "market": "US",
+        "goals": [
+          "dining"
+        ],
+        "hardConstraints": {
+          "maxAnnualFeeUsd": 0,
+          "cardType": "personal"
+        }
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "recommend_cards",
+      "outcome": "recommendations",
+      "result": {
+        "methodologyVersion": "example-method-v1",
+        "ordering": "goal matches, then complementary benefits, then identifier for ties",
+        "candidates": [
+          {
+            "slug": "example-bistro-card",
+            "name": "Example Bistro Card",
+            "goalMatches": [
+              "dining"
+            ],
+            "reasons": [
+              "Earns 3% cash back on dining on up to $1,500 of dining spend per quarter; 1% after the cap."
+            ],
+            "annualFee": {
+              "amountUsd": 0,
+              "status": "known"
+            },
+            "limitations": [
+              "The 3% rate applies only up to the quarterly cap."
+            ],
+            "sources": [
+              "https://issuer.example/cards/bistro"
+            ]
+          },
+          {
+            "slug": "example-supper-card",
+            "name": "Example Supper Card",
+            "goalMatches": [
+              "dining"
+            ],
+            "reasons": [
+              "Earns 3 Example Points per $1 on dining."
+            ],
+            "annualFee": {
+              "amountUsd": 0,
+              "status": "known"
+            },
+            "diningCap": {
+              "status": "unknown"
+            },
+            "limitations": [
+              "Whether the dining rate has a cap is unknown.",
+              "Example Points are not cash; their value depends on how they are redeemed."
+            ],
+            "sources": [
+              "https://issuer.example/cards/supper"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "Two cards fit the dining goal, personal cards only, with a $0 annual fee. They match your goal equally, so neither is ranked above the other; Rewardopedia lists tied cards in a fixed identifier order. Example Bistro Card: 3% cash back on dining on up to $1,500 of dining spend each quarter, then 1%; $0 annual fee. Example Supper Card: 3 Example Points per $1 on dining; whether that rate has a cap is unknown; $0 annual fee. Cash back and Example Points are different currencies, so 3% and 3 points per $1 are not equal money. Would you rather have simple cash back, or points you would redeem through Example's program? Sources: issuer.example."
+    }
+  ]
+}

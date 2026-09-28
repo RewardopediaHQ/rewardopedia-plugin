@@ -3,12 +3,13 @@ name: validate
 on:
   push:
     branches: [main]
-    tags: ["v*"]
   pull_request:
   schedule:
     # Weekly recheck of external documentation links.
     - cron: "17 6 * * 1"
   workflow_dispatch:
+  # release.yml runs these checks on each vX.Y.Z tag before publishing.
+  workflow_call:
 
 permissions:
   contents: read

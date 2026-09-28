@@ -5,14 +5,20 @@
   "locale": "es-US",
   "market": "US",
   "demonstrates": [
+    "The assistant explains request history before the first Rewardopedia call.",
     "The assistant shows what is saved before changing it.",
     "Removing one card leaves other saved cards unchanged.",
-    "Deletion is confirmed first and reported only after success."
+    "Deletion is confirmed first and reported only after success.",
+    "Backup removal is not promised as immediate or on a published timeline."
   ],
   "steps": [
     {
       "actor": "user",
       "text": "¿Qué recuerdas de mí?"
+    },
+    {
+      "actor": "assistant",
+      "text": "Antes de usar Rewardopedia: guarda en tu cuenta de Rewardopedia un historial depurado de cada solicitud, incluidas búsquedas y comparaciones, hasta que lo borres. También guarda los datos que me indicas, como las tarjetas que tienes, pero no guardaré nada que me pidas no guardar. Todo se comparte entre los asistentes conectados a tu cuenta, y puedes pedirme que te muestre o borre lo guardado cuando quieras."
     },
     {
       "actor": "tool_call",
@@ -87,7 +93,7 @@
     },
     {
       "actor": "assistant",
-      "text": "Borré todo tu contexto guardado y tu historial en Rewardopedia. Las copias de seguridad del servicio se eliminan según los plazos publicados en la guía de privacidad."
+      "text": "Borré todo tu contexto guardado y tu historial en Rewardopedia. Las copias de seguridad del servicio no se eliminan de inmediato, y el plazo máximo de conservación aún no se ha publicado; consulta la guía de privacidad."
     }
   ]
 }

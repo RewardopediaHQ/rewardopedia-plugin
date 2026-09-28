@@ -15,17 +15,20 @@ and qualitative shortlists. The server's advertised tool descriptions and
 input/output schemas are authoritative; this skill describes how to use them
 well. Tool-by-tool behaviour is in [references/tools.md](references/tools.md).
 
-## Before the first personal disclosure
+## Before the first Rewardopedia call
 
-Some tool calls are remembered by the user's Rewardopedia account. Before
-saving anything personal, or before the first recommendation that uses personal
-context, tell the user in one or two sentences:
+Every Rewardopedia tool call, including card searches and comparisons, is
+recorded in a sanitized request history on the user's Rewardopedia account.
+Before the first Rewardopedia tool call in a conversation, tell the user in one
+or two sentences:
 
-- what is saved: cards they say they hold, spending and goals they disclose,
-  preferences, constraints, temporary plans, and a sanitized history of tool
-  requests;
-- that saved context is shared across every assistant connected to the same
-  Rewardopedia account;
+- that Rewardopedia keeps a sanitized history of each Rewardopedia request,
+  searches and comparisons included, until they delete it;
+- that facts they state explicitly (cards they hold, spending, goals,
+  preferences, constraints, temporary plans) are saved, and that you will not
+  save anything they ask you not to;
+- that saved facts and history are shared across every assistant connected to
+  the same Rewardopedia account;
 - that they can ask to see it (`get_my_context`) or delete some or all of it
   (`forget_my_context`) at any time.
 
@@ -37,17 +40,25 @@ share one anyway, do not pass it to any tool.
 
 1. **Inspect.** When personal context could matter, call `get_my_context` and
    summarise what is saved. Do not assume context from earlier conversations.
-2. **Disclose.** Save only facts the user states explicitly, using
-   `update_my_context`. Searches, comparisons and questions show interest only;
-   they never establish that the user holds a card. Hypotheticals ("if I had
-   card X") are not facts. Adding or removing one card must not replace other
-   saved cards.
+2. **Disclose.** After the notice, save only facts the user states explicitly,
+   using `update_my_context`, and never a fact the user asked you not to save.
+   Searches, comparisons and questions show interest only; they never establish
+   that the user holds a card. Hypotheticals ("if I had card X") are not facts.
+   Adding or removing one card must not replace other saved cards.
 3. **Clarify.** `recommend_cards` needs a supported goal, supplied now or saved
-   earlier. Never map free-form prose onto a goal yourself. If the result is
-   `needs_input`, ask the returned follow-up questions and wait for answers.
+   earlier. When the user clearly names a published goal, send that goal token
+   ("dining is my priority" becomes `dining`) and tell the user which goal you
+   used. Do not guess a goal from a vague request such as "the best card". If
+   the user wants something the tool does not support, such as building credit,
+   say that Rewardopedia shortlists do not cover it rather than substituting a
+   supported goal. Never send the user's words as a goal: free-form prose is
+   rejected as invalid input. When unsure, ask, or call without a goal and ask
+   the returned `needs_input` follow-up questions, then wait for answers.
 4. **Recommend.** Present candidates in the order returned, with their supported
-   reasons, conditions, limitations and source references. Say which context
-   version was used when the user asks why.
+   reasons, conditions, limitations and source references. That order is the
+   methodology's fixed ordering (goal matches, then complementary benefits, then
+   an identifier to break ties), not a verdict. Say which context version was
+   used when the user asks why.
 5. **Correct.** When the user corrects a saved fact ("I closed that card"),
    update it with `update_my_context`, then re-run the recommendation if they
    want a fresh shortlist.
@@ -69,6 +80,10 @@ These rules apply to every tool result, not only recommendations.
   its source.
 - Do not declare an overall winner from one highlighted number such as a lower
   fee or higher rate. Describe trade-offs against the user's stated needs.
+- Never call a candidate "best", "top pick" or "#1", or imply that the first
+  candidate is better than the others. Candidates that match equally are listed
+  in identifier order to break the tie. Explain each candidate against the
+  user's stated goals and constraints.
 - Make no approval-odds, eligibility, credit-score, dollar-savings or
   "you will earn $X" claims. Offers may have eligibility rules the tools cannot
   evaluate; say so.

@@ -11,13 +11,17 @@ from urllib.parse import urlsplit
 
 from .common import Finding, load_json, read_text, repo_files
 from .constants import (
+    BRAND_DOMAIN,
     CANONICAL_ENDPOINT,
+    CLIENT_GUIDES,
     LICENSE_ID,
     MARKETPLACE,
     MCP_SERVER_NAME,
     PLUGIN_NAME,
     REPOSITORY_URL,
     SCOPES,
+    SERVICE_HOST,
+    SERVICE_LIVE,
     TOOLS,
 )
 from .links import is_reserved_example
@@ -25,7 +29,10 @@ from .links import is_reserved_example
 CHECK = "content"
 TOOLS_DOC = "skills/card-recommendations/references/tools.md"
 TOOL_HEADING = re.compile(r"^### `([a-z_]+)`", re.MULTILINE)
-URL = re.compile(r"https?://[^\s\"'<>)]+")
+URL = re.compile(r"https?://[^\s\"'<>)`\]]+")
+CODE_URL = re.compile(r"`(https?://[^`\s]+)`")
+# Files users read or clients load; validator code and tests may hold bad URLs on purpose.
+ENDPOINT_SCAN_SUFFIXES = frozenset({".md", ".json", ".yml", ".yaml"})
 NOT_LIVE_BANNER = "NOT YET LIVE"
 CARD_KEYS = frozenset({"slug", "cards", "wallet", "walletAdditions", "walletRemovals"})
 
@@ -87,6 +94,57 @@ def check_endpoints(root: Path) -> list[Finding]:
     return findings
 
 
+def check_endpoint_references(root: Path) -> list[Finding]:
+    """Every service URL users read is the canonical endpoint, and guides give it verbatim."""
+    findings: list[Finding] = []
+    for path in repo_files(root):
+        if path.suffix not in ENDPOINT_SCAN_SUFFIXES:
+            continue
+        relative = path.as_posix()
+        text = (root / path).read_text(encoding="utf-8")
+        for number, line in enumerate(text.splitlines(), start=1):
+            for raw in URL.findall(line):
+                url = raw.rstrip(".,;:!?")
+                host = (urlsplit(url).hostname or "").lower()
+                if host == SERVICE_HOST and url != CANONICAL_ENDPOINT:
+                    findings.append(
+                        Finding(
+                            CHECK,
+                            relative,
+                            f"service URL must be exactly {CANONICAL_ENDPOINT}: {url}",
+                            line=number,
+                        )
+                    )
+                elif "rewardopedia" in host and not (
+                    host == BRAND_DOMAIN or host.endswith("." + BRAND_DOMAIN)
+                ):
+                    findings.append(
+                        Finding(
+                            CHECK, relative, f"lookalike Rewardopedia host: {host}", line=number
+                        )
+                    )
+    for client, guide in CLIENT_GUIDES.items():
+        guide_text = read_text(root, guide)
+        if guide_text is None:
+            continue  # reported by the compatibility check
+        if CANONICAL_ENDPOINT not in guide_text:
+            findings.append(
+                Finding(CHECK, guide, f"{client} guide must give the endpoint {CANONICAL_ENDPOINT}")
+            )
+        for number, line in enumerate(guide_text.splitlines(), start=1):
+            for url in CODE_URL.findall(line):
+                if url != CANONICAL_ENDPOINT:
+                    findings.append(
+                        Finding(
+                            CHECK,
+                            guide,
+                            f"a URL users paste must be {CANONICAL_ENDPOINT}: {url}",
+                            line=number,
+                        )
+                    )
+    return findings
+
+
 def check_tools_doc(root: Path) -> list[Finding]:
     findings: list[Finding] = []
     text = read_text(root, TOOLS_DOC)
@@ -123,7 +181,11 @@ def check_readme(root: Path) -> list[Finding]:
     if text is None:
         return [Finding(CHECK, "README.md", "file is missing")]
     findings = []
-    if NOT_LIVE_BANNER not in text:
+    if SERVICE_LIVE and NOT_LIVE_BANNER in text:
+        findings.append(
+            Finding(CHECK, "README.md", f"remove the '{NOT_LIVE_BANNER}' banner once live")
+        )
+    elif not SERVICE_LIVE and NOT_LIVE_BANNER not in text:
         findings.append(Finding(CHECK, "README.md", f"must carry the '{NOT_LIVE_BANNER}' banner"))
     if CANONICAL_ENDPOINT not in text:
         findings.append(Finding(CHECK, "README.md", f"must name the endpoint {CANONICAL_ENDPOINT}"))
@@ -175,11 +237,39 @@ def check_examples_synthetic(root: Path) -> list[Finding]:
     return findings
 
 
+def check_examples_notice(root: Path) -> list[Finding]:
+    """The assistant speaks (the request-history notice) before an example's first tool call."""
+    findings: list[Finding] = []
+    for path in repo_files(root):
+        if path.parts[0] != "examples" or path.suffix != ".json":
+            continue
+        try:
+            data = json.loads((root / path).read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue  # reported by the schema check
+        steps = data.get("steps") if isinstance(data, dict) else None
+        if not isinstance(steps, list):
+            continue  # reported by the schema check
+        actors = [step.get("actor") for step in steps if isinstance(step, dict)]
+        if "tool_call" in actors and "assistant" not in actors[: actors.index("tool_call")]:
+            findings.append(
+                Finding(
+                    CHECK,
+                    path.as_posix(),
+                    "give the request-history notice in an assistant step before the first "
+                    "tool call",
+                )
+            )
+    return findings
+
+
 def check(root: Path) -> list[Finding]:
     return [
         *check_identity(root),
         *check_endpoints(root),
+        *check_endpoint_references(root),
         *check_tools_doc(root),
         *check_readme(root),
         *check_examples_synthetic(root),
+        *check_examples_notice(root),
     ]

@@ -5,8 +5,9 @@
   "locale": "en-US",
   "market": "US",
   "demonstrates": [
-    "The assistant explains what is saved before the first personal disclosure.",
+    "The assistant explains what is saved, including request history, before the first Rewardopedia call.",
     "Only an explicit statement becomes a wallet fact.",
+    "A clearly named goal is mapped to its goal token, and the assistant says which goal it used.",
     "A card whose fee is unknown does not pass a fee constraint.",
     "Conditions and limitations stay attached to each candidate."
   ],
@@ -17,7 +18,7 @@
     },
     {
       "actor": "assistant",
-      "text": "Before I save anything: Rewardopedia remembers the cards you say you hold, your goals and constraints, and a sanitized history of requests, shared across assistants connected to your Rewardopedia account. You can ask what is saved or ask me to forget it at any time. Please don't share card or account numbers. Shall I save that you hold the Example Cash Card and prefer dining with a $95 annual fee limit?"
+      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request in your Rewardopedia account until you delete it, and it saves facts you tell me, such as the cards you hold and your goals and constraints, unless you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time. Please don't share card or account numbers. Shall I save that you hold the Example Cash Card, that your goal is dining, and that your annual fee limit is $95?"
     },
     {
       "actor": "user",

@@ -25,6 +25,7 @@ FAKE = {
     "Slack token": "xoxb-" + "123456789012-abcdefghij",
     "secret or restricted key": "sk_" + "live_" + "abcdefghijklmnopqrstuv",
     "Google API key": "AIza" + "SyA1234567890abcdefghijklmnopqrstuv",
+    "Supabase secret key": "sb_" + "secret_" + "abcdefghijklmnop0123456789",
     "JSON Web Token": "eyJ" + "hbGciOiJIUzI1NiJ9." + "eyJ" + "zdWIiOiIxMjM0NTYifQ.abcdefghijklmnop",
     "bearer credential": "Authorization: " + "Bearer abcdefghijklmnopqrstuvwxyz012345",
     "credentials in URL": "https://user:" + "p4ssw0rd@example.com/path",
@@ -38,10 +39,44 @@ def test_detects_secret(label: str) -> None:
     assert label in set(secrets.scan_line(f"value: {FAKE[label]}"))
 
 
+# A random-looking value; assembled so this file never holds a literal secret.
+VALUE = "Zx9Qw3Er7Ty1" + "Ui5Op2AsDf8Gh4Jk6Lz0"
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "MCP_SERVICE_KEY=" + VALUE,
+        "export PASSWORD=" + VALUE,
+        "client_secret=" + VALUE,
+        "  token: " + VALUE,
+        "      MCP_ACTOR_SIGNING_KEY: " + VALUE,
+        '"client_secret": "' + VALUE + '",',
+        "SUPABASE_KEY=" + VALUE,
+        "Client secret: " + VALUE,
+        "- **Client secret:** `" + VALUE + "`",
+        "| Client secret | `" + VALUE + "` |",
+        "APIKEY='" + VALUE + "'",
+    ],
+)
+def test_detects_unquoted_and_prose_credentials(line: str) -> None:
+    assert "hard-coded credential" in set(secrets.scan_line(line))
+
+
 @pytest.mark.parametrize(
     "line",
     [
         'client_secret = "<your-client-secret>"',
+        "GH_TOKEN: ${{ github.token }}",
+        "key: tsbuildinfo-${{ runner.os }}-${{ hashFiles('uv.lock') }}",
+        "token = os.environ.get('GITHUB_TOKEN')",
+        "const TOKEN = process.env.REWARDOPEDIA_API_TOKEN;",
+        "password=$DB_PASSWORD",
+        "The access token: expires-after-an-hour",
+        "| Token | Opaque-and-verified-on-every-request |",
+        "{ key: IndexNavActive; label: string }",
+        "sorted(findings, key=lambda e: list(e.absolute_path))",
+        "keywords: credit-cards",
         'api_key: "${REWARDOPEDIA_API_KEY}"',
         'password = "example-password-value"',
         "Order number 1234 5678 9012 3456 is not a card",  # fails the Luhn check
@@ -51,6 +86,18 @@ def test_detects_secret(label: str) -> None:
 )
 def test_ignores_non_secrets(line: str) -> None:
     assert list(secrets.scan_line(line)) == []
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "password = readVault2Secret(name)",
+        "token = os.environ.get('GITHUB_TOKEN')",
+        "key: tsbuildinfo-${{ runner.os }}",
+    ],
+)
+def test_calls_and_template_expressions_are_not_values(line: str) -> None:
+    assert secrets.ASSIGNMENT.search(line) is None
 
 
 def test_allow_marker_exempts_a_line() -> None:
