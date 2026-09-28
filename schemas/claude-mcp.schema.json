@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RewardopediaHQ/rewardopedia-plugin/schemas/claude-mcp.schema.json",
+  "title": "Claude Code .mcp.json (remote HTTP servers only)",
+  "description": "Remote HTTP server entries as documented at https://code.claude.com/docs/en/mcp (retrieved 2026-09-27). Headers are not allowed: authentication uses OAuth, never embedded credentials.",
+  "type": "object",
+  "properties": {
+    "mcpServers": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "http"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          }
+        },
+        "required": ["type", "url"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["mcpServers"],
+  "additionalProperties": false
+}

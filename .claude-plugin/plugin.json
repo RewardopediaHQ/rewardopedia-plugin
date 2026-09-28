@@ -1,0 +1,20 @@
+{
+  "name": "rewardopedia",
+  "displayName": "Rewardopedia",
+  "version": "0.1.0-dev",
+  "description": "Search and compare US credit cards with source-backed facts and get a qualitative shortlist that can use context you choose to save, inspect and delete.",
+  "author": {
+    "name": "Rewardopedia",
+    "url": "https://www.rewardopedia.com"
+  },
+  "homepage": "https://github.com/RewardopediaHQ/rewardopedia-plugin",
+  "repository": "https://github.com/RewardopediaHQ/rewardopedia-plugin",
+  "license": "MIT",
+  "keywords": [
+    "credit-cards",
+    "rewards",
+    "card-comparison",
+    "recommendations",
+    "mcp"
+  ]
+}

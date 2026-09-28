@@ -1,0 +1,72 @@
+{
+  "synthetic": true,
+  "title": "Comparing cards with different reward currencies",
+  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "locale": "en-US",
+  "market": "US",
+  "demonstrates": [
+    "The requested order is preserved.",
+    "Different reward currencies are not treated as equal money.",
+    "An unknown fee stays unknown instead of becoming zero.",
+    "No universal winner is declared from one number."
+  ],
+  "steps": [
+    {
+      "actor": "user",
+      "text": "Compare the Example Travel Card and the Example Cash Card for me."
+    },
+    {
+      "actor": "tool_call",
+      "tool": "compare_cards",
+      "arguments": {
+        "locale": "en-US",
+        "market": "US",
+        "cards": [
+          "example-travel-card",
+          "example-cash-card"
+        ]
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "compare_cards",
+      "outcome": "comparison",
+      "result": {
+        "cards": [
+          {
+            "slug": "example-travel-card",
+            "annualFee": {
+              "amountUsd": 250,
+              "status": "known"
+            },
+            "foreignTransactionFee": {
+              "status": "unknown"
+            },
+            "earning": [
+              "2 Example Miles per $1 on travel booked directly with airlines"
+            ]
+          },
+          {
+            "slug": "example-cash-card",
+            "annualFee": {
+              "amountUsd": 0,
+              "status": "known"
+            },
+            "foreignTransactionFee": {
+              "percent": 3,
+              "status": "known"
+            },
+            "earning": [
+              "1.5% cash back on all purchases"
+            ]
+          }
+        ],
+        "unavailable": []
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "Example Travel Card: $250 annual fee; earns 2 Example Miles per $1 on travel booked directly with airlines; foreign transaction fee unknown. Example Cash Card: no annual fee; 1.5% cash back on everything; 3% foreign transaction fee. Miles and cash back are different currencies, so the 2x and 1.5% figures are not directly comparable as money. Neither card is better overall: the cash card is simpler and has no annual fee, while the travel card may suit you if you book airline travel and value miles. Would you like me to check either card's full fee details?"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "synthetic": true,
+  "title": "Inspecting, correcting and deleting saved context",
+  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "locale": "es-US",
+  "market": "US",
+  "demonstrates": [
+    "The assistant shows what is saved before changing it.",
+    "Removing one card leaves other saved cards unchanged.",
+    "Deletion is confirmed first and reported only after success."
+  ],
+  "steps": [
+    {
+      "actor": "user",
+      "text": "¿Qué recuerdas de mí?"
+    },
+    {
+      "actor": "tool_call",
+      "tool": "get_my_context",
+      "arguments": {}
+    },
+    {
+      "actor": "tool_result",
+      "tool": "get_my_context",
+      "outcome": "context",
+      "result": {
+        "contextVersion": 7,
+        "wallet": [
+          "example-cash-card",
+          "example-dining-card"
+        ],
+        "goals": [
+          "groceries"
+        ]
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "Tengo guardado que tienes la Example Cash Card y la Example Dining Card, y que tu objetivo es comestibles (groceries)."
+    },
+    {
+      "actor": "user",
+      "text": "Cerré la Example Dining Card. Y después borra todo."
+    },
+    {
+      "actor": "tool_call",
+      "tool": "update_my_context",
+      "arguments": {
+        "walletRemovals": [
+          "example-dining-card"
+        ]
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "update_my_context",
+      "outcome": "saved",
+      "result": {
+        "contextVersion": 8,
+        "wallet": [
+          "example-cash-card"
+        ]
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "Listo: quité la Example Dining Card y la Example Cash Card sigue guardada. ¿Confirmas que quieres borrar todo lo que Rewardopedia recuerda de ti, incluido el historial? No se puede deshacer."
+    },
+    {
+      "actor": "user",
+      "text": "Sí, bórralo todo."
+    },
+    {
+      "actor": "tool_call",
+      "tool": "forget_my_context",
+      "arguments": {
+        "scope": "all"
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "forget_my_context",
+      "outcome": "deleted",
+      "result": {
+        "deleted": true
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "Borré todo tu contexto guardado y tu historial en Rewardopedia. Las copias de seguridad del servicio se eliminan según los plazos publicados en la guía de privacidad."
+    }
+  ]
+}

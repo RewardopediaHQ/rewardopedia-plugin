@@ -1,0 +1,102 @@
+{
+  "synthetic": true,
+  "title": "Disclosure notice, an explicit wallet fact, then a constrained shortlist",
+  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "locale": "en-US",
+  "market": "US",
+  "demonstrates": [
+    "The assistant explains what is saved before the first personal disclosure.",
+    "Only an explicit statement becomes a wallet fact.",
+    "A card whose fee is unknown does not pass a fee constraint.",
+    "Conditions and limitations stay attached to each candidate."
+  ],
+  "steps": [
+    {
+      "actor": "user",
+      "text": "I already have the Example Cash Card. Dining is my priority and I don't want an annual fee over $95."
+    },
+    {
+      "actor": "assistant",
+      "text": "Before I save anything: Rewardopedia remembers the cards you say you hold, your goals and constraints, and a sanitized history of requests, shared across assistants connected to your Rewardopedia account. You can ask what is saved or ask me to forget it at any time. Please don't share card or account numbers. Shall I save that you hold the Example Cash Card and prefer dining with a $95 annual fee limit?"
+    },
+    {
+      "actor": "user",
+      "text": "Yes, save it."
+    },
+    {
+      "actor": "tool_call",
+      "tool": "update_my_context",
+      "arguments": {
+        "walletAdditions": [
+          "example-cash-card"
+        ],
+        "goals": [
+          "dining"
+        ],
+        "hardConstraints": {
+          "maxAnnualFeeUsd": 95
+        }
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "update_my_context",
+      "outcome": "saved",
+      "result": {
+        "contextVersion": 4
+      }
+    },
+    {
+      "actor": "tool_call",
+      "tool": "recommend_cards",
+      "arguments": {
+        "locale": "en-US",
+        "market": "US",
+        "goals": [
+          "dining"
+        ],
+        "hardConstraints": {
+          "maxAnnualFeeUsd": 95
+        }
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "recommend_cards",
+      "outcome": "recommendations",
+      "result": {
+        "methodologyVersion": "example-method-v1",
+        "contextVersion": 4,
+        "candidates": [
+          {
+            "slug": "example-dining-card",
+            "name": "Example Dining Card",
+            "reasons": [
+              "Earns 3x Example Points on dining, capped at $6,000 of dining spend per year; 1x after the cap."
+            ],
+            "annualFee": {
+              "amountUsd": 95,
+              "status": "known"
+            },
+            "limitations": [
+              "Example Points are not cash; their value depends on how they are redeemed."
+            ],
+            "sources": [
+              "https://issuer.example/cards/dining"
+            ]
+          }
+        ],
+        "excluded": [
+          {
+            "slug": "example-premium-card",
+            "reason": "annual_fee_unknown"
+          }
+        ]
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "One card fits your dining goal and $95 limit: the Example Dining Card. It earns 3x Example Points on dining, but only on the first $6,000 of dining spend each year (1x after that), and its annual fee is $95. Example Points are not cash, so their value depends on how you redeem them. The Example Premium Card was not included because its annual fee is unknown, so it cannot be shown to meet your limit. Source: issuer.example."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "rewardopedia",
+  "description": "Rewardopedia's public plugin marketplace.",
+  "owner": {
+    "name": "Rewardopedia",
+    "url": "https://www.rewardopedia.com"
+  },
+  "plugins": [
+    {
+      "name": "rewardopedia",
+      "source": "./",
+      "description": "Search and compare US credit cards with source-backed facts and get a qualitative shortlist that can use context you choose to save, inspect and delete."
+    }
+  ]
+}

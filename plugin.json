@@ -1,0 +1,41 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "rewardopedia",
+  "version": "0.1.0-dev",
+  "description": "Search and compare US credit cards with source-backed facts and get a qualitative shortlist that can use context you choose to save, inspect and delete.",
+  "author": {
+    "name": "Rewardopedia",
+    "url": "https://www.rewardopedia.com"
+  },
+  "homepage": "https://github.com/RewardopediaHQ/rewardopedia-plugin",
+  "repository": "https://github.com/RewardopediaHQ/rewardopedia-plugin",
+  "license": "MIT",
+  "keywords": [
+    "credit-cards",
+    "rewards",
+    "card-comparison",
+    "recommendations",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Rewardopedia",
+        "shortDescription": "Compare US credit cards and get a source-backed shortlist",
+        "longDescription": "Search and compare US credit cards using published, source-referenced facts, then ask for a qualitative shortlist for a supported goal. Saved context is optional, stays with your Rewardopedia account, and can be inspected or deleted at any time. Unknown facts stay unknown, and the plugin makes no approval-odds, dollar-savings or cross-currency value claims.",
+        "developerName": "Rewardopedia",
+        "category": "Finance",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://www.rewardopedia.com",
+        "termsOfServiceURL": "https://www.rewardopedia.com/terms",
+        "defaultPrompt": [
+          "Use Rewardopedia to compare two US credit cards I name, keeping fees and conditions attached.",
+          "Use Rewardopedia to suggest cards for my dining goal, and show me what you will remember first."
+        ]
+      }
+    }
+  }
+}

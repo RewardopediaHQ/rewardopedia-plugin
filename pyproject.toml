@@ -1,0 +1,41 @@
+[project]
+name = "rewardopedia-plugin-validation"
+# Version of the validation tooling only. The plugin release version lives in
+# plugin.json and .claude-plugin/plugin.json.
+version = "0.0.0"
+description = "Validation tooling for the Rewardopedia plugin package."
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "jsonschema[format-nongpl]>=4.26",
+    "PyYAML>=6.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3",
+    "pytest>=9.1",
+    "ruff>=0.16",
+    "types-jsonschema>=4.26",
+    "types-PyYAML>=6.0.12",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["validation", "scripts", "tests"]

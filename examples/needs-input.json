@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "title": "A request without a supported goal returns needs_input",
+  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "locale": "en-US",
+  "market": "US",
+  "demonstrates": [
+    "The assistant does not guess a goal from prose.",
+    "needs_input is a distinct outcome with follow-up questions."
+  ],
+  "steps": [
+    {
+      "actor": "user",
+      "text": "What's the best credit card?"
+    },
+    {
+      "actor": "tool_call",
+      "tool": "recommend_cards",
+      "arguments": {
+        "locale": "en-US",
+        "market": "US",
+        "goals": []
+      }
+    },
+    {
+      "actor": "tool_result",
+      "tool": "recommend_cards",
+      "outcome": "needs_input",
+      "result": {
+        "outcome": "needs_input",
+        "followUpQuestions": [
+          "Which goal matters most: cash back, travel rewards, dining, groceries, gas, hotel loyalty, airline loyalty or business spending?",
+          "Is there a maximum annual fee you would accept?"
+        ]
+      }
+    },
+    {
+      "actor": "assistant",
+      "text": "There is no single best card; it depends on what you want. Which goal matters most to you: cash back, travel rewards, dining, groceries, gas, hotel loyalty, airline loyalty or business spending? And is there a maximum annual fee you would accept?"
+    }
+  ]
+}

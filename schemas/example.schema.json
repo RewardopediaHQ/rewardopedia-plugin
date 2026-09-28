@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RewardopediaHQ/rewardopedia-plugin/schemas/example.schema.json",
+  "title": "Rewardopedia synthetic example",
+  "description": "A synthetic, illustrative conversation using the Rewardopedia tools. Not a tool schema.",
+  "type": "object",
+  "properties": {
+    "synthetic": {
+      "const": true
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notice": {
+      "type": "string",
+      "pattern": "^Synthetic and illustrative\\."
+    },
+    "locale": {
+      "enum": ["en-US", "es-US"]
+    },
+    "market": {
+      "const": "US"
+    },
+    "demonstrates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    }
+  },
+  "required": ["synthetic", "title", "notice", "locale", "market", "demonstrates", "steps"],
+  "additionalProperties": false,
+  "$defs": {
+    "tool": {
+      "enum": [
+        "search_cards",
+        "get_card_detail",
+        "compare_cards",
+        "get_card_offers",
+        "get_card_benefits",
+        "get_earning_rates",
+        "get_card_fees",
+        "recommend_cards",
+        "get_my_context",
+        "update_my_context",
+        "forget_my_context"
+      ]
+    },
+    "step": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "enum": ["user", "assistant"]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["actor", "text"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "const": "tool_call"
+            },
+            "tool": {
+              "$ref": "#/$defs/tool"
+            },
+            "arguments": {
+              "type": "object"
+            }
+          },
+          "required": ["actor", "tool", "arguments"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "const": "tool_result"
+            },
+            "tool": {
+              "$ref": "#/$defs/tool"
+            },
+            "outcome": {
+              "type": "string",
+              "minLength": 1
+            },
+            "result": {
+              "type": "object"
+            }
+          },
+          "required": ["actor", "tool", "outcome", "result"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
