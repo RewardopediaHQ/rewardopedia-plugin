@@ -17,8 +17,9 @@ well. Tool-by-tool behaviour is in [references/tools.md](references/tools.md).
 
 ## Before the first Rewardopedia call
 
-Every Rewardopedia tool call, including card searches and comparisons, is
-recorded in a sanitized request history on the user's Rewardopedia account.
+Every Rewardopedia tool call except a deletion, including card searches and
+comparisons, is recorded in a sanitized request history on the user's
+Rewardopedia account.
 Before the first Rewardopedia tool call in a conversation, tell the user in one
 or two sentences:
 
@@ -42,9 +43,12 @@ share one anyway, do not pass it to any tool.
    summarise what is saved. Do not assume context from earlier conversations.
 2. **Disclose.** After the notice, save only facts the user states explicitly,
    using `update_my_context`, and never a fact the user asked you not to save.
+   Send structured entries (`kind`, `key`, `value`), a new `requestId` UUID and
+   the latest `contextVersion` from `get_my_context` as `expectedVersion`.
    Searches, comparisons and questions show interest only; they never establish
    that the user holds a card. Hypotheticals ("if I had card X") are not facts.
    Adding or removing one card must not replace other saved cards.
+   `recommend_cards` never saves anything.
 3. **Clarify.** `recommend_cards` needs a supported goal, supplied now or saved
    earlier. When the user clearly names a published goal, send that goal token
    ("dining is my priority" becomes `dining`) and tell the user which goal you
@@ -53,17 +57,25 @@ share one anyway, do not pass it to any tool.
    say that Rewardopedia shortlists do not cover it rather than substituting a
    supported goal. Never send the user's words as a goal: free-form prose is
    rejected as invalid input. When unsure, ask, or call without a goal and ask
-   the returned `needs_input` follow-up questions, then wait for answers.
+   the returned `needs_input` follow-up questions (each has a `code` and, where
+   relevant, `allowedValues`), then wait for answers. `recommend_cards` reads
+   saved context itself: remembered goals apply only when you send none, and
+   remembered cards are added to the wallet you send.
 4. **Recommend.** Present candidates in the order returned, with their supported
    reasons, conditions, limitations and source references. That order is the
    methodology's fixed ordering (goal matches, then complementary benefits, then
-   an identifier to break ties), not a verdict. Say which context version was
-   used when the user asks why.
+   an identifier to break ties), not a verdict; each candidate's `rank` field is
+   that order, not a score. Say which saved facts were used (`contextRefs`,
+   `savedContextUsed`) and which were not applied (`unappliedContextRefs`) when
+   the user asks why.
 5. **Correct.** When the user corrects a saved fact ("I closed that card"),
-   update it with `update_my_context`, then re-run the recommendation if they
-   want a fresh shortlist.
+   remove it by entry ID (`removeIds`) or replace it with
+   `assertionType: "correction"` using `update_my_context`, then re-run the
+   recommendation if they want a fresh shortlist.
 6. **Forget.** For "forget X" or "delete everything", confirm the scope, then
-   call `forget_my_context`. Deletion is destructive and cannot be undone.
+   call `forget_my_context` with `all: true` or the entry or request IDs.
+   Deleting a request also deletes the entries it created and later history
+   recorded while they existed; say so. Deletion cannot be undone.
 
 ## Presentation rules
 
@@ -81,14 +93,14 @@ These rules apply to every tool result, not only recommendations.
 - Do not declare an overall winner from one highlighted number such as a lower
   fee or higher rate. Describe trade-offs against the user's stated needs.
 - Never call a candidate "best", "top pick" or "#1", or imply that the first
-  candidate is better than the others. Candidates that match equally are listed
+  candidate (or `rank` 1) is better than the others. Candidates that match equally are listed
   in identifier order to break the tie. Explain each candidate against the
   user's stated goals and constraints.
 - Make no approval-odds, eligibility, credit-score, dollar-savings or
   "you will earn $X" claims. Offers may have eligibility rules the tools cannot
   evaluate; say so.
-- `wallet_baseline_incomplete` means some saved cards could not be resolved.
-  Do not claim a recommendation improves on the user's current cards.
+- `wallet_baseline_incomplete` means the user's cards are unknown or some could
+  not be resolved. Do not claim a recommendation improves on the user's current cards.
 - "No qualified candidates", "needs input" and a service error are different
   outcomes. Never fill a gap with cards from memory or general knowledge and
   present them as Rewardopedia results.
@@ -106,6 +118,13 @@ These rules apply to every tool result, not only recommendations.
   not retry in a tight loop.
 - A failed context update did not save anything. Never tell the user a change
   was remembered unless the tool reported success.
+- `version_conflict` means saved context changed since you read it: call
+  `get_my_context` again, check what still applies, and ask before resending.
+  Retrying the same change after an error or lost answer is safe with the same
+  `requestId` and `expectedVersion`.
+- A call whose history could not be recorded returns an error instead of a
+  result. Say the request did not complete; do not present results from
+  memory.
 
 ## Safety
 

@@ -34,7 +34,9 @@ CODE_URL = re.compile(r"`(https?://[^`\s]+)`")
 # Files users read or clients load; validator code and tests may hold bad URLs on purpose.
 ENDPOINT_SCAN_SUFFIXES = frozenset({".md", ".json", ".yml", ".yaml"})
 NOT_LIVE_BANNER = "NOT YET LIVE"
-CARD_KEYS = frozenset({"slug", "cards", "wallet", "walletAdditions", "walletRemovals"})
+CARD_KEYS = frozenset(
+    {"slug", "slugs", "cardSlug", "cardSlugs", "requestedSlug", "canonicalSlug", "ownedCardSlugs"}
+)
 
 
 def check_identity(root: Path) -> list[Finding]:

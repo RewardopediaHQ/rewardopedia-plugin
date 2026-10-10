@@ -1,13 +1,13 @@
 {
   "synthetic": true,
   "title": "A request without a supported goal returns needs_input",
-  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "notice": "Synthetic and illustrative. Card names, facts and identifiers are invented. Arguments follow the server's input schemas; results show only some of the fields the server returns.",
   "locale": "en-US",
   "market": "US",
   "demonstrates": [
-    "The assistant explains request history before the first Rewardopedia call.",
-    "The assistant does not guess a goal from prose.",
-    "needs_input is a distinct outcome with follow-up questions."
+    "A vague request is not turned into a guessed goal.",
+    "The tool's follow-up questions are asked before any recommendation.",
+    "The assistant waits for the user's answer."
   ],
   "steps": [
     {
@@ -16,13 +16,13 @@
     },
     {
       "actor": "assistant",
-      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request, including searches and comparisons, in your Rewardopedia account until you delete it. It saves facts you tell me, such as cards you hold, but I won't save anything you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time."
+      "text": "Before I use Rewardopedia: it keeps a sanitized history of each Rewardopedia request, including searches and comparisons, in your Rewardopedia account until you delete it. It saves facts you tell me, such as cards you hold, but I won't save anything you ask me not to. Both are shared across assistants connected to your account, and you can ask what is saved or ask me to forget it at any time. Please don't share card or account numbers."
     },
     {
       "actor": "tool_call",
       "tool": "recommend_cards",
       "arguments": {
-        "locale": "en-US",
+        "contentLocale": "en-US",
         "market": "US",
         "goals": []
       }
@@ -33,9 +33,31 @@
       "outcome": "needs_input",
       "result": {
         "outcome": "needs_input",
+        "contentLocale": "en-US",
+        "market": "US",
+        "contextVersion": 0,
+        "savedContextUsed": false,
+        "goals": [],
+        "unsupportedGoals": [],
+        "candidates": [],
+        "exclusions": [],
         "followUpQuestions": [
-          "Which goal matters most: cash back, travel rewards, dining, groceries, gas, hotel loyalty, airline loyalty or business spending?",
-          "Is there a maximum annual fee you would accept?"
+          {
+            "code": "goal_required",
+            "allowedValues": [
+              "cash_back",
+              "travel_rewards",
+              "dining",
+              "groceries",
+              "gas",
+              "hotel_loyalty",
+              "airline_loyalty",
+              "business_spending"
+            ]
+          },
+          {
+            "code": "annual_fee_limit"
+          }
         ]
       }
     },
