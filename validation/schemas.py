@@ -26,7 +26,7 @@ VENDOR_HASHES = {
     f"{VENDOR_DIR}/mcp.schema.json": (
         "6539175bfcdf43085855183e86da40ea94b166547a72b47ae9a0a390516d3acb"
     ),
-    TOOL_SNAPSHOT: "e367c46da03505b7d2d78caaf7d9db93dd045016c20806d52423cf1490fbee6d",
+    TOOL_SNAPSHOT: "67f66b91327645d61456c33f6cccdd2927f918a21e2ef22e3f45204e18daae89",
 }
 
 # Manifest file -> schema file.

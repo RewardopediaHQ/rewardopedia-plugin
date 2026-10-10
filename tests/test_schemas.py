@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -147,3 +148,20 @@ def test_tool_snapshot_must_list_the_eleven_tools(repo: Path) -> None:
 
 def test_current_examples_match_the_tool_snapshot(repo: Path) -> None:
     assert errors(schemas.check_example_calls(repo)) == []
+
+
+def test_earning_rate_reference_matches_the_served_contract(repo: Path) -> None:
+    """Ended rates are dropped. The old 'window is not re-checked' claim must not return."""
+    snapshot = json.loads((repo / schemas.TOOL_SNAPSHOT).read_text(encoding="utf-8"))
+    description = next(
+        tool["description"] for tool in snapshot["tools"] if tool["name"] == "get_earning_rates"
+    )
+    reference = (repo / "skills/card-recommendations/references/tools.md").read_text(
+        encoding="utf-8"
+    )
+    stale = "not re-checked against today"
+    served = "before today's UTC date is not served"
+    assert stale not in description
+    assert stale not in " ".join(reference.split())
+    assert served in description
+    assert served in " ".join(reference.split())

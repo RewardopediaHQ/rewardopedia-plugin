@@ -112,10 +112,11 @@ window (`effectiveFrom`/`effectiveTo`) and, when served, typed rate
 components, thresholds, enrollment, promotional scope, minimum transaction,
 linked-account tier, dynamic categories and merchant inclusions or exclusions,
 with the card's reward currency and program. Rows are those Rewardopedia
-records as current; the effective window is not re-checked against today, so
-an `effectiveTo` before today may mean the rate has ended. A cap amount may be
-unknown even when a cap period is known. Rates in different units or programs
-are not comparable as money.
+records as current and not ended: a row whose `effectiveTo` is before today's
+UTC date is not served (UTC can be ahead of the US local date). A missing
+`effectiveTo` is an unknown end, not proof the rate continues. A cap amount
+may be unknown even when a cap period is known. Rates in different units or
+programs are not comparable as money.
 
 ### `get_card_fees`
 

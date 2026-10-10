@@ -50,6 +50,8 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
   - `get_card_fees` serves annual and foreign transaction fees and lists the
     rest in `unreportedFeeTypes`; `waivedFirstYear` appears only when the
     source states it.
+  - `get_earning_rates` does not serve a row whose `effectiveTo` is before
+    today's UTC date. A missing `effectiveTo` is an unknown end.
   - Offer `composition`, `search_cards` paging, version conflicts and retries,
     and the `forget_my_context` cascade.
   - Every tool call except `forget_my_context` is recorded in history, and
