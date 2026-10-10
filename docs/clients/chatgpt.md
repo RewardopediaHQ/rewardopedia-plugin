@@ -2,7 +2,7 @@
 
 **Status: unverified.** No Rewardopedia connection has been tested in ChatGPT,
 and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not
-live yet. These steps come from OpenAI's documentation (retrieved 2026-09-27)
+live yet. These steps come from OpenAI's documentation (rechecked 2026-10-10)
 and will be confirmed or corrected when the service launches. See the
 [compatibility table](../compatibility.md).
 
@@ -15,34 +15,42 @@ and how to inspect or delete saved context.
 ## Surface and account prerequisites
 
 - **Surface:** ChatGPT on the web (`chatgpt.com`) using a developer-mode
-  connection to a remote MCP server.
-- **Account:** a ChatGPT account where developer mode is available. OpenAI
-  states that availability depends on account and workspace policy. Its help
-  center says full MCP support, including write actions, is for Business,
-  Enterprise and Edu workspaces (where admins control developer mode), and that
-  Pro users can connect MCP servers with read/fetch permissions. If your plan
-  only allows read/fetch, saving, correcting and deleting context may be
-  unavailable in ChatGPT; this has not been tested.
+  custom MCP server.
+- **Account:** a ChatGPT account where developer mode is available. OpenAI's
+  help center says full MCP support, including write actions, is for
+  Business, Enterprise and Edu workspaces, where admins and owners control
+  developer mode, and that Pro users can connect MCP servers with read/fetch
+  permissions in developer mode. If your plan only allows read/fetch, saving,
+  correcting and deleting context may be unavailable in ChatGPT; this has not
+  been tested.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
+- **Sign-in information shared with ChatGPT:** open. ChatGPT requests the
+  OpenID scopes (`openid`, `email`, `profile`) an authorization server
+  advertises. Whether Rewardopedia enables them, which would share your name,
+  username, avatar and email address with ChatGPT, is an owner decision that
+  will be recorded here before release.
 - A listing in the ChatGPT plugin directory is a separate, later step and is
   not available yet.
 
 ## Connect
 
-1. In ChatGPT, open **Settings**, select **Security and login**, and turn on
-   **Developer mode**. On Business, Enterprise and Edu workspaces an admin may
-   need to enable or grant developer mode first.
-2. Go to [ChatGPT Plugins](https://chatgpt.com/plugins) and select the plus
-   button.
+1. Turn on developer mode in **Settings > Apps > Advanced settings**. On
+   Business, Enterprise and Edu workspaces an admin or owner must allow it
+   first (Business: **Workspace settings > Permissions & roles**; Enterprise
+   and Edu can also grant it to selected members).
+2. Go to [ChatGPT Plugins](https://chatgpt.com/plugins), select the plus
+   button, then **Add custom MCP server**.
 3. Enter the name `Rewardopedia` and a short description.
 4. Under **Connection**, enter the MCP server URL
    `https://mcp.rewardopedia.com/mcp`.
-5. Create the connection. ChatGPT discovers Rewardopedia's OAuth settings and
-   identifies itself with its client metadata document, so you do not need to
-   enter a client ID or secret.
-6. When prompted, sign in to Rewardopedia and review the requested
+5. Configure authentication as OAuth. ChatGPT discovers Rewardopedia's OAuth
+   settings and identifies itself with its own client metadata document, so
+   you do not need to enter a client ID or secret.
+6. Review the risk warning, select **I understand and want to continue**, then
+   **Create as a plugin**, and review the tools ChatGPT discovered.
+7. When prompted, sign in to Rewardopedia and review the requested
    permissions: `cards:read`, `context:read` and `context:write`.
-7. Start a new chat and add the Rewardopedia connection from the tools menu.
+8. Start a new chat, type `@` in the prompt box and select Rewardopedia.
 
 ## Try it
 
@@ -56,21 +64,18 @@ and how to inspect or delete saved context.
 
 - To delete saved context, ask: "Using Rewardopedia, forget everything you
   remember about me." Deleting context is separate from disconnecting.
-- To revoke access, remove or disconnect the Rewardopedia connection at
+- To revoke access, remove or disconnect the Rewardopedia plugin at
   [ChatGPT Plugins](https://chatgpt.com/plugins).
 
 ## Developer surface: Codex and the ChatGPT desktop app
 
 This repository's root `plugin.json` and `mcp.json` follow OpenAI's portable
-plugin layout, and Codex reads the repository's marketplace file. A local
-Codex CLI installation from a checkout lists the plugin and its MCP server
-entry; installation in the ChatGPT desktop app and live tool calls have not
-been tested. Developer surfaces do not count as consumer ChatGPT verification.
-
-```bash
-codex plugin marketplace add RewardopediaHQ/rewardopedia-plugin
-codex plugin add rewardopedia@rewardopedia
-```
+plugin layout. On 2026-09-27 a local Codex CLI installation from a checkout
+listed the plugin and its MCP server entry. Signing in from Codex or the
+ChatGPT desktop app is not supported for version 0.1.0: Rewardopedia accepts
+only the pre-registered ChatGPT web and Claude clients, so these surfaces are
+expected to be refused at sign-in. Developer surfaces do not count as consumer
+ChatGPT verification.
 
 ## Sources
 

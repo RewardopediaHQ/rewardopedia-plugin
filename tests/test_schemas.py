@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -107,3 +108,60 @@ def test_vendored_schema_changes_are_detected(repo: Path) -> None:
     path = repo / "schemas/vendor/agent-plugins-1.0.0/plugin.schema.json"
     path.write_text(path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     assert any("vendored schema changed" in e for e in errors(schemas.check_vendor_hashes(repo)))
+
+
+def test_example_arguments_follow_the_server_input_schema(repo: Path) -> None:
+    def change(data: dict[str, Any]) -> None:
+        arguments = data["steps"][2]["arguments"]
+        arguments["locale"] = arguments.pop("contentLocale")
+        arguments["hardConstraints"] = {"maxAnnualFeeUsd": 95}
+
+    edit_json(repo, "examples/needs-input.json", change)
+    found = errors(schemas.check_example_calls(repo))
+    assert any("'contentLocale' is a required property" in e for e in found)
+    assert any("'hardConstraints', 'locale' were unexpected" in e for e in found)
+
+
+def test_example_argument_values_are_validated(repo: Path) -> None:
+    def change(data: dict[str, Any]) -> None:
+        data["steps"][6]["arguments"]["requestId"] = "not-a-uuid"
+
+    edit_json(repo, "examples/correct-and-forget.json", change)
+    assert any(
+        "/steps/6/arguments/requestId" in e for e in errors(schemas.check_example_calls(repo))
+    )
+
+
+def test_example_results_use_only_returned_fields(repo: Path) -> None:
+    edit_json(
+        repo,
+        "examples/needs-input.json",
+        lambda d: d["steps"][3]["result"].update(excluded=[]),
+    )
+    assert any("does not return: excluded" in e for e in errors(schemas.check_example_calls(repo)))
+
+
+def test_tool_snapshot_must_list_the_eleven_tools(repo: Path) -> None:
+    edit_json(repo, schemas.TOOL_SNAPSHOT, lambda d: d["tools"].pop())
+    assert any("tools must be exactly" in e for e in errors(schemas.load_tool_snapshot(repo)[1]))
+
+
+def test_current_examples_match_the_tool_snapshot(repo: Path) -> None:
+    assert errors(schemas.check_example_calls(repo)) == []
+
+
+def test_earning_rate_reference_matches_the_served_contract(repo: Path) -> None:
+    """Ended rates are dropped. The old 'window is not re-checked' claim must not return."""
+    snapshot = json.loads((repo / schemas.TOOL_SNAPSHOT).read_text(encoding="utf-8"))
+    description = next(
+        tool["description"] for tool in snapshot["tools"] if tool["name"] == "get_earning_rates"
+    )
+    reference = (repo / "skills/card-recommendations/references/tools.md").read_text(
+        encoding="utf-8"
+    )
+    stale = "not re-checked against today"
+    served = "before today's UTC date is not served"
+    assert stale not in description
+    assert stale not in " ".join(reference.split())
+    assert served in description
+    assert served in " ".join(reference.split())

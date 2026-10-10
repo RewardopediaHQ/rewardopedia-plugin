@@ -2,8 +2,8 @@
 
 **Status: unverified.** No Rewardopedia connection has been tested in
 Perplexity, and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`)
-is not live yet. These steps come from Perplexity's documentation (retrieved
-2026-09-27) and will be confirmed or corrected when the service launches. See
+is not live yet. These steps come from Perplexity's documentation (rechecked
+2026-10-10) and will be confirmed or corrected when the service launches. See
 the [compatibility table](../compatibility.md).
 
 ## Before you connect
@@ -19,10 +19,12 @@ and how to inspect or delete saved context.
   Enterprise subscribers. In Enterprise organizations, members can add their
   own connectors only if an admin allows it.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
-- **OAuth client registration:** pending. Perplexity asks for a client ID and
-  secret when a server does not support dynamic client registration.
-  Rewardopedia will publish the Perplexity setup values in this guide before
-  release. Do not use client credentials from any other source.
+- **OAuth client registration:** pending. Perplexity asks for a client ID when
+  a server does not support dynamic client registration, which Rewardopedia
+  turns off. Rewardopedia will publish a public client ID for Perplexity in
+  this guide before release. It is a public client: there is no client secret,
+  so leave the secret empty. Do not use client credentials from any other
+  source.
 
 ## Connect
 
@@ -31,15 +33,18 @@ and how to inspect or delete saved context.
 3. Enter the name `Rewardopedia` and the MCP server URL
    `https://mcp.rewardopedia.com/mcp`.
 4. Set **Authentication** to **OAuth** and **Transport** to
-   **Streamable HTTP**.
+   **Streamable HTTP**. Enter the Rewardopedia client ID once it is published
+   here.
 5. Read and accept the custom connector acknowledgement, then select **Add**.
 6. Select the Rewardopedia connector card to sign in to Rewardopedia and
    review the requested permissions: `cards:read`, `context:read` and
    `context:write`.
 
 Enterprise admins can add the connector for the whole organization from
-**Enterprise settings > Permissions > Connectors permissions**; each member
-should still sign in with their own Rewardopedia account.
+**Enterprise settings > Permissions > Connectors permissions**. Each member
+should still sign in with their own Rewardopedia account: an admin who signs in
+once on behalf of the organization would share one Rewardopedia account, and
+its saved context, with every member.
 
 ## Try it
 

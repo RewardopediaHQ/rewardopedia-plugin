@@ -46,9 +46,9 @@ Rewardopedia keeps two kinds of data in your Rewardopedia account:
   you state them. Rewardopedia's instructions tell it to explain what is saved
   first and not to save anything you ask it not to. Searches, comparisons and
   hypothetical questions never become facts.
-- **A sanitized history of every Rewardopedia tool request.** This is recorded
-  automatically, even if you never save a fact. It includes card searches and
-  comparisons.
+- **A sanitized history of every Rewardopedia tool request except
+  deletions.** This is recorded automatically, even if you never save a fact.
+  It includes card searches and comparisons.
 
 Both belong to your Rewardopedia account and are shared by every assistant you
 connect with that account.
@@ -71,8 +71,8 @@ stored in this package.
 
 | Permission | What it allows |
 | --- | --- |
-| `cards:read` | Search, look up and compare published card facts |
-| `context:read` | Read your saved context and history, and use it for recommendations |
+| `cards:read` | Search, look up and compare published card facts, and ask for recommendations |
+| `context:read` | Read your saved context and history, and use saved facts in recommendations |
 | `context:write` | Save, correct and delete your saved context |
 
 ## Connect an assistant
@@ -100,7 +100,7 @@ listed in [docs/sources.md](docs/sources.md).
 | `skills/card-recommendations/` | Assistant skill and the eleven-tool reference |
 | `docs/` | Privacy guide, client guides, compatibility table and sources |
 | `examples/` | Synthetic example conversations |
-| `schemas/`, `validation/`, `scripts/`, `tests/` | Validation used locally and in CI |
+| `schemas/`, `validation/`, `scripts/`, `tests/` | Validation used locally and in CI, including the server's tool contract in `schemas/vendor/rewardopedia-mcp/` that the examples are checked against |
 | `.github/workflows/` | CI validation, and the release workflow that publishes a tagged version |
 
 ## Validate locally

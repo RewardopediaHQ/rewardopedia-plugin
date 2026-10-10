@@ -1,15 +1,14 @@
 {
   "synthetic": true,
   "title": "Inspecting, correcting and deleting saved context",
-  "notice": "Synthetic and illustrative. Card names, facts, identifiers and field names are invented for this example. The live server's advertised schemas are authoritative.",
+  "notice": "Synthetic and illustrative. Card names, facts and identifiers are invented. Arguments follow the server's input schemas; results show only some of the fields the server returns.",
   "locale": "es-US",
   "market": "US",
   "demonstrates": [
-    "The assistant explains request history before the first Rewardopedia call.",
-    "The assistant shows what is saved before changing it.",
-    "Removing one card leaves other saved cards unchanged.",
-    "Deletion is confirmed first and reported only after success.",
-    "Backup removal is not promised as immediate or on a published timeline."
+    "Saved context is inspected before it is described.",
+    "A closed card is removed by its entry ID without touching other saved cards.",
+    "Every change carries a new requestId and the current contextVersion as expectedVersion.",
+    "Deleting everything is confirmed first, and backup limits are not overstated."
   ],
   "steps": [
     {
@@ -18,7 +17,7 @@
     },
     {
       "actor": "assistant",
-      "text": "Antes de usar Rewardopedia: guarda en tu cuenta de Rewardopedia un historial depurado de cada solicitud, incluidas búsquedas y comparaciones, hasta que lo borres. También guarda los datos que me indicas, como las tarjetas que tienes, pero no guardaré nada que me pidas no guardar. Todo se comparte entre los asistentes conectados a tu cuenta, y puedes pedirme que te muestre o borre lo guardado cuando quieras."
+      "text": "Antes de usar Rewardopedia: guarda en tu cuenta de Rewardopedia un historial depurado de cada solicitud, incluidas búsquedas y comparaciones, hasta que lo borres. También guarda los datos que me indicas, como las tarjetas que tienes, pero no guardaré nada que me pidas no guardar. Todo se comparte entre los asistentes conectados a tu cuenta, y puedes pedirme que te muestre o borre lo guardado cuando quieras. No compartas números de tarjeta ni de cuenta."
     },
     {
       "actor": "tool_call",
@@ -31,13 +30,47 @@
       "outcome": "context",
       "result": {
         "contextVersion": 7,
-        "wallet": [
-          "example-cash-card",
-          "example-dining-card"
+        "asOf": "2026-10-10T15:00:00Z",
+        "entries": [
+          {
+            "id": "00000000-0000-4000-8000-000000000101",
+            "disclosure": {
+              "kind": "wallet",
+              "key": "example-cash-card",
+              "value": {
+                "productName": "Example Cash Card",
+                "cardSlug": "example-cash-card"
+              }
+            },
+            "active": true
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000102",
+            "disclosure": {
+              "kind": "wallet",
+              "key": "example-dining-card",
+              "value": {
+                "productName": "Example Dining Card",
+                "cardSlug": "example-dining-card"
+              }
+            },
+            "active": true
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000103",
+            "disclosure": {
+              "kind": "goal",
+              "key": "groceries",
+              "value": {
+                "goal": "groceries",
+                "priority": 1
+              }
+            },
+            "active": true
+          }
         ],
-        "goals": [
-          "groceries"
-        ]
+        "history": [],
+        "nextBefore": null
       }
     },
     {
@@ -52,8 +85,10 @@
       "actor": "tool_call",
       "tool": "update_my_context",
       "arguments": {
-        "walletRemovals": [
-          "example-dining-card"
+        "requestId": "00000000-0000-4000-8000-000000000201",
+        "expectedVersion": 7,
+        "removeIds": [
+          "00000000-0000-4000-8000-000000000102"
         ]
       }
     },
@@ -62,10 +97,10 @@
       "tool": "update_my_context",
       "outcome": "saved",
       "result": {
+        "requestId": "00000000-0000-4000-8000-000000000201",
         "contextVersion": 8,
-        "wallet": [
-          "example-cash-card"
-        ]
+        "appliedVersion": 8,
+        "duplicate": false
       }
     },
     {
@@ -80,7 +115,9 @@
       "actor": "tool_call",
       "tool": "forget_my_context",
       "arguments": {
-        "scope": "all"
+        "requestId": "00000000-0000-4000-8000-000000000202",
+        "expectedVersion": 8,
+        "all": true
       }
     },
     {
@@ -88,7 +125,10 @@
       "tool": "forget_my_context",
       "outcome": "deleted",
       "result": {
-        "deleted": true
+        "requestId": "00000000-0000-4000-8000-000000000202",
+        "contextVersion": 9,
+        "appliedVersion": 9,
+        "duplicate": false
       }
     },
     {

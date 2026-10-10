@@ -2,7 +2,7 @@
 
 **Status: unverified.** No Rewardopedia connection has been tested in Grok, and
 the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not live
-yet. These steps come from xAI's documentation (retrieved 2026-09-27) and will
+yet. These steps come from xAI's documentation (rechecked 2026-10-10) and will
 be confirmed or corrected when the service launches. See the
 [compatibility table](../compatibility.md).
 
@@ -19,9 +19,12 @@ and how to inspect or delete saved context.
   Business and Enterprise plans, a team admin must first add the connector in
   the xAI console.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
-- **OAuth client registration:** pending. If the connector form asks for an
-  OAuth client ID, Rewardopedia will publish the value for Grok in this guide
-  before release. Do not use client credentials from any other source.
+- **OAuth client registration:** pending. xAI does not document how Grok
+  identifies itself to an OAuth server, and Rewardopedia turns off automatic
+  client registration. Grok is admitted only after a live test; if the
+  connector form asks for an OAuth client ID, Rewardopedia will publish the
+  public client ID for Grok in this guide before release. There is no client
+  secret. Do not use client credentials from any other source.
 
 ## Connect
 
@@ -33,8 +36,8 @@ and how to inspect or delete saved context.
 
 ## Connect (Grok Business and Enterprise)
 
-1. A team admin signs in to the xAI console, selects the team, and opens
-   **Grok Business > Connectors**.
+1. A team admin signs in to the xAI console, selects the team, and opens the
+   connectors page.
 2. The admin selects **+ Add Connector**, then **Other**, and enters
    `https://mcp.rewardopedia.com/mcp`.
 3. Members connect their own Rewardopedia accounts at
@@ -59,7 +62,9 @@ and how to inspect or delete saved context.
 
 xAI documents that Grok Build reads Claude Code plugins and marketplaces, so
 this repository's `.claude-plugin/` manifests and `.mcp.json` may load there.
-This has not been tested and does not count as consumer Grok verification.
+Signing in to Rewardopedia from Grok Build is not supported for version 0.1.0,
+because its OAuth client is not pre-registered. This has not been tested and
+does not count as consumer Grok verification.
 
 ## Sources
 

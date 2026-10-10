@@ -201,7 +201,7 @@ def test_examples_must_use_reserved_domains_and_example_cards(repo: Path) -> Non
 
 
 def test_example_wallet_cards_are_synthetic(repo: Path) -> None:
-    result = {"wallet": ["example-cash-card", "real-card"]}
+    result = {"walletBaseline": {"ownedCardSlugs": ["example-cash-card", "real-card"]}}
     steps = [
         NOTICE,
         CALL,

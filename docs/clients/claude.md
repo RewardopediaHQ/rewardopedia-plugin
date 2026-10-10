@@ -2,8 +2,8 @@
 
 **Status: unverified.** No Rewardopedia connection has been tested in Claude,
 and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not
-live yet. These steps come from Anthropic's documentation (retrieved
-2026-09-27) and will be confirmed or corrected when the service launches. See
+live yet. These steps come from Anthropic's documentation (rechecked
+2026-10-10) and will be confirmed or corrected when the service launches. See
 the [compatibility table](../compatibility.md).
 
 ## Before you connect
@@ -23,23 +23,33 @@ and how to inspect or delete saved context.
   the organization before members can connect.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
 
-## Connect (Pro and Max plans)
+## Connect (Free, Pro and Max plans)
 
 1. Go to **Customize > Connectors**.
-2. Select **+**, then **Add custom connector**.
-3. Enter the remote MCP server URL `https://mcp.rewardopedia.com/mcp`.
-4. Leave **Advanced settings** empty. Claude discovers Rewardopedia's OAuth
-   settings, so no OAuth client ID or secret is needed.
-5. Select **Add**, then connect and sign in to Rewardopedia. Review the
-   requested permissions: `cards:read`, `context:read` and `context:write`.
-6. In a conversation, open the **+** menu, choose **Connectors**, and turn on
+2. Select **+ Add**, then **Add custom connector**.
+3. Enter the name `Rewardopedia` and the remote MCP server URL
+   `https://mcp.rewardopedia.com/mcp`, then select **Continue**.
+4. Review the authentication settings Claude detected and select
+   **Continue**.
+5. Under **Authentication**, choose **Sign in now** or **Sign in when
+   needed**.
+6. Under **OAuth client**, choose **Use Claude's published identity
+   (Recommended)**. Rewardopedia accepts Claude's published identity only;
+   **Register automatically** is not supported, and no client ID or secret is
+   needed.
+7. Leave **Request headers** empty and select **Add**. Sign in to
+   Rewardopedia and review the requested permissions: `cards:read`,
+   `context:read` and `context:write`.
+8. In a conversation, open the **+** menu, choose **Connectors**, and turn on
    Rewardopedia.
 
 ## Connect (Team and Enterprise plans)
 
 1. An Owner or Primary Owner opens **Organization settings > Connectors**,
-   selects **Add**, hovers over **Custom**, selects **Web**, and enters
-   `https://mcp.rewardopedia.com/mcp`.
+   selects **Add**, hovers over **Custom**, selects **Web**, enters the name
+   `Rewardopedia` and `https://mcp.rewardopedia.com/mcp`, and makes the same
+   choices as steps 4 to 7 above, including **Use Claude's published
+   identity (Recommended)**.
 2. Each member then opens **Customize > Connectors**, finds Rewardopedia and
    selects **Connect** to sign in with their own Rewardopedia account.
 
@@ -52,7 +62,8 @@ and how to inspect or delete saved context.
   save first."
 
 Review tool approval requests. Only choose "Allow always" for tools you are
-comfortable running unsupervised; `forget_my_context` deletes data.
+comfortable running unsupervised; `update_my_context` and `forget_my_context`
+change or delete data.
 
 ## Disconnect and delete
 
@@ -62,17 +73,20 @@ comfortable running unsupervised; `forget_my_context` deletes data.
 
 ## Developer surface: Claude Code
 
-This repository is also a Claude Code plugin marketplace. A local installation
-from a checkout loads the `card-recommendations` skill and the `rewardopedia`
-MCP server entry (Claude Code 2.1.283, 2026-09-27); live tool calls have not
-been tested. Developer surfaces do not count as consumer Claude verification.
+This repository is also a Claude Code plugin marketplace. On 2026-09-27 a local
+installation from a checkout loaded the `card-recommendations` skill and the
+`rewardopedia` MCP server entry in Claude Code 2.1.283.
 
 ```bash
 claude plugin marketplace add RewardopediaHQ/rewardopedia-plugin
 claude plugin install rewardopedia@rewardopedia
 ```
 
-Then run `/mcp` in a session to sign in to the `rewardopedia` server.
+Signing in to Rewardopedia from Claude Code is not supported for version
+0.1.0: Rewardopedia accepts only the pre-registered claude.ai and ChatGPT web
+clients and turns off automatic registration, so Claude Code's own client is
+expected to be refused at sign-in. Developer surfaces do not count as consumer
+Claude verification.
 
 ## Sources
 

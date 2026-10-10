@@ -12,10 +12,13 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from .common import Finding, load_json, repo_files
+from .constants import TOOLS
 
 CHECK = "schemas"
 
 VENDOR_DIR = "schemas/vendor/agent-plugins-1.0.0"
+# The server's advertised tool contract, exported from the Rewardopedia monorepo.
+TOOL_SNAPSHOT = "schemas/vendor/rewardopedia-mcp/tools.json"
 VENDOR_HASHES = {
     f"{VENDOR_DIR}/plugin.schema.json": (
         "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883"
@@ -23,6 +26,7 @@ VENDOR_HASHES = {
     f"{VENDOR_DIR}/mcp.schema.json": (
         "6539175bfcdf43085855183e86da40ea94b166547a72b47ae9a0a390516d3acb"
     ),
+    TOOL_SNAPSHOT: "67f66b91327645d61456c33f6cccdd2927f918a21e2ef22e3f45204e18daae89",
 }
 
 # Manifest file -> schema file.
@@ -160,6 +164,86 @@ def check_examples(root: Path) -> list[Finding]:
     return findings
 
 
+def load_tool_snapshot(root: Path) -> tuple[dict[str, dict[str, Any]], list[Finding]]:
+    """Return the vendored tool contract keyed by tool name, checked against TOOLS."""
+    data, findings = load_json(root, TOOL_SNAPSHOT, CHECK)
+    if not isinstance(data, dict) or not isinstance(data.get("tools"), list):
+        if data is not None:
+            findings.append(Finding(CHECK, TOOL_SNAPSHOT, "must hold a 'tools' list"))
+        return {}, findings
+    tools = {t["name"]: t for t in data["tools"] if isinstance(t, dict) and "name" in t}
+    if list(tools) != list(TOOLS):
+        findings.append(
+            Finding(
+                CHECK,
+                TOOL_SNAPSHOT,
+                f"tools must be exactly {', '.join(TOOLS)} in order; found {', '.join(tools)}",
+            )
+        )
+    for name, tool in tools.items():
+        schema = tool.get("inputSchema")
+        if not isinstance(schema, dict):
+            findings.append(Finding(CHECK, TOOL_SNAPSHOT, f"{name}: inputSchema is missing"))
+            continue
+        try:
+            Draft202012Validator.check_schema(schema)
+        except Exception as error:  # jsonschema raises SchemaError subclasses
+            findings.append(Finding(CHECK, TOOL_SNAPSHOT, f"{name}: invalid inputSchema: {error}"))
+    return tools, findings
+
+
+def _strict_arguments(schema: dict[str, Any]) -> Draft202012Validator:
+    # The server ignores unknown top-level arguments; an example must not invent any.
+    return Draft202012Validator(
+        {**schema, "additionalProperties": False},
+        format_checker=Draft202012Validator.FORMAT_CHECKER,
+    )
+
+
+def check_example_calls(root: Path) -> list[Finding]:
+    """Example tool calls use the server's real arguments; results only its real fields."""
+    tools, findings = load_tool_snapshot(root)
+    if not tools:
+        return findings
+    for path in repo_files(root):
+        if path.parts[0] != "examples" or path.suffix != ".json":
+            continue
+        relative = path.as_posix()
+        data, load_findings = load_json(root, relative, CHECK)
+        if load_findings or not isinstance(data, dict):
+            continue  # reported by check_examples
+        for index, step in enumerate(data.get("steps") or []):
+            if not isinstance(step, dict) or step.get("tool") not in tools:
+                continue
+            tool = tools[step["tool"]]
+            where = f"/steps/{index}"
+            if step.get("actor") == "tool_call" and isinstance(tool.get("inputSchema"), dict):
+                validator = _strict_arguments(tool["inputSchema"])
+                for error in sorted(
+                    validator.iter_errors(step.get("arguments")), key=lambda e: e.json_path
+                ):
+                    pointer = "/" + "/".join(str(part) for part in error.absolute_path)
+                    findings.append(
+                        Finding(
+                            CHECK,
+                            relative,
+                            f"{where}/arguments{pointer}: {step['tool']} {error.message}",
+                        )
+                    )
+            elif step.get("actor") == "tool_result" and isinstance(step.get("result"), dict):
+                unknown = sorted(set(step["result"]) - set(tool.get("outputProperties", [])))
+                if unknown:
+                    findings.append(
+                        Finding(
+                            CHECK,
+                            relative,
+                            f"{where}/result has fields {step['tool']} does not return: "
+                            f"{', '.join(unknown)}",
+                        )
+                    )
+    return findings
+
+
 def check(root: Path) -> list[Finding]:
     return [
         *check_syntax(root),
@@ -167,4 +251,5 @@ def check(root: Path) -> list[Finding]:
         *check_manifests(root),
         *check_skills(root),
         *check_examples(root),
+        *check_example_calls(root),
     ]

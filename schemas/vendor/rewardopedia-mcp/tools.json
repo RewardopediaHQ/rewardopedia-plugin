@@ -1,0 +1,1504 @@
+{
+  "commit": "e77826bf62ae3ac50e2fa3cf0ab0cf996c8dce23",
+  "source": "MehdiZare/rewardopedia-mono-repo",
+  "tools": [
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Search credit cards"
+      },
+      "description": "Search Rewardopedia's credit cards for one exact contentLocale and market. Only cards with an eligible, adopted Rewardopedia publication for exactly this contentLocale and market are returned; there is no fallback to another language, and a card missing here is not evidence that it does not exist. Filters combine (every given filter must match): q is one phrase matched against the card name, issuer name or slug (case, spacing, punctuation and trademark symbols are ignored); issuer is a canonical issuer slug; category is a canonical card category; ranking returns only the cards on that published Rewardopedia best list, in its order, each with its published rank there (ranks can skip numbers held by cards not available for this pair, and a card below the list's cut-off is not returned). Results are paged: request nextPage until it is null. Cards carry Rewardopedia's shared facts: fees, earning rates and their conditions, offers, benefits, APR, source references and publication identity. Unknown values are null, never zero. An offer may carry a composition: every part of its welcome offer in its own kind and unit, never added together or converted. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "$defs": {
+          "BestLane": {
+            "enum": [
+              "travel",
+              "cashback",
+              "business",
+              "no-annual-fee",
+              "hotel",
+              "airline",
+              "students"
+            ],
+            "title": "BestLane",
+            "type": "string"
+          },
+          "CardCategorySlug": {
+            "enum": [
+              "travel",
+              "cashback",
+              "no-annual-fee",
+              "no-foreign-transaction-fee",
+              "airline",
+              "hotel",
+              "dining",
+              "groceries",
+              "gas",
+              "transit",
+              "streaming",
+              "entertainment",
+              "shopping",
+              "drugstores",
+              "cell-phone",
+              "everyday-spending",
+              "rotating-categories",
+              "balance-transfer",
+              "intro-apr",
+              "business",
+              "student",
+              "secured",
+              "credit-building",
+              "co-branded",
+              "lounge-access",
+              "transferable-points"
+            ],
+            "title": "CardCategorySlug",
+            "type": "string"
+          }
+        },
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/CardCategorySlug"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Canonical card category."
+          },
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "issuer": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Canonical issuer slug, for example chase or american-express.",
+            "title": "Issuer"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "page": {
+            "default": 1,
+            "maximum": 10000,
+            "minimum": 1,
+            "title": "Page",
+            "type": "integer"
+          },
+          "pageSize": {
+            "default": 10,
+            "maximum": 20,
+            "minimum": 1,
+            "title": "Pagesize",
+            "type": "integer"
+          },
+          "q": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Free text: one phrase in the card name, issuer name or slug.",
+            "title": "Q"
+          },
+          "ranking": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/BestLane"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Only cards on this published best list, in its order and with their published ranks."
+          }
+        },
+        "required": [
+          "contentLocale",
+          "market"
+        ],
+        "title": "search_cardsArguments",
+        "type": "object"
+      },
+      "name": "search_cards",
+      "outputProperties": [
+        "cards",
+        "contentLocale",
+        "market",
+        "nextPage",
+        "pagination",
+        "qualification"
+      ],
+      "outputRequired": [
+        "cards",
+        "contentLocale",
+        "market",
+        "nextPage",
+        "pagination",
+        "qualification"
+      ],
+      "title": "Search credit cards"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get card details"
+      },
+      "description": "Get one credit card's full Rewardopedia facts for one exact contentLocale and market. Accepts a canonical slug or a retired alias; card.slug in the result is canonical. Returns an error when no card with an eligible publication for exactly this pair matches (unknown slug, not published in this language, withheld or revoked); there is no fallback to another language. Cards carry Rewardopedia's shared facts: fees, earning rates and their conditions, offers, benefits, APR, source references and publication identity. Unknown values are null, never zero. An offer may carry a composition: every part of its welcome offer in its own kind and unit, never added together or converted. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "contentLocale",
+          "market"
+        ],
+        "title": "get_card_detailArguments",
+        "type": "object"
+      },
+      "name": "get_card_detail",
+      "outputProperties": [
+        "card",
+        "contentLocale",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "outputRequired": [
+        "card",
+        "contentLocale",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "title": "Get card details"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Compare credit cards"
+      },
+      "description": "Compare 2 to 5 credit cards for one exact contentLocale and market. Entries keep the requested order. Each entry is available (the card's facts), duplicate (an alias or repeat of an earlier entry's card, which it names by position) or unavailable (no card with an eligible publication for this pair). complete is false whenever an entry is unavailable: never present an incomplete comparison as covering every requested card. Rewardopedia does not score or rank compared cards. Cards carry Rewardopedia's shared facts: fees, earning rates and their conditions, offers, benefits, APR, source references and publication identity. Unknown values are null, never zero. An offer may carry a composition: every part of its welcome offer in its own kind and unit, never added together or converted. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slugs": {
+            "description": "Card slugs or aliases in the order to compare them.",
+            "items": {
+              "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+              "maxLength": 200,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "minItems": 2,
+            "title": "Slugs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "slugs",
+          "contentLocale",
+          "market"
+        ],
+        "title": "compare_cardsArguments",
+        "type": "object"
+      },
+      "name": "compare_cards",
+      "outputProperties": [
+        "complete",
+        "contentLocale",
+        "entries",
+        "market",
+        "qualification"
+      ],
+      "outputRequired": [
+        "complete",
+        "contentLocale",
+        "entries",
+        "market",
+        "qualification"
+      ],
+      "title": "Compare credit cards"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get current card offers"
+      },
+      "description": "Get one credit card's current welcome-offer legs for one exact contentLocale and market, as Rewardopedia's API evaluates them (rule card-current-offers-v1 on asOf, the UTC date): a leg past its end date or before its start date is excluded, boundaries inclusive. Legs sharing offerGroupId are additive parts of one offer; different offers are alternatives and must never be added together. Each leg keeps its bonus in its own unit (bonusCurrency), spend requirement, timeframe, qualifying-spend condition, dates and source. expiryKnown false means no end date is recorded, which is not proof the offer is still available. limitations lists material gaps (no current offer, unknown expiry, unparseable dates, targeted/referral/in-branch offers, offers only partly current, a headline offer that is not current, offer parts without a number, a withheld single amount, per-unit caps that are maxima). A leg may carry composition, every part of its welcome offer (points, miles, cash back, statement credits, gift cards, free nights, companion tickets, elite status, subscriptions), each in its own kind and unit with its own spend condition. Absent or null means no parts were recorded; bonusAmount may then be the whole offer or only part of it. When present it is the source of truth. Never add parts of different kinds or convert them to points or dollars. perUnitCap is the issuer-stated maximum of one unit (for example one night), never multiplied by the count. subtotals are per kind and null when parts of a kind differ in condition, unit, name or cap. label and properName are the issuer's English wording (labelSourceLocale). A null bonusAmount beside a composition means bonusAmount cannot state the offer; read composition. Never read it as zero. No dollar value, eligibility or approval is asserted. Accepts a canonical slug or a retired alias; the returned card slug is canonical. Returns an error when no card with an eligible publication for exactly this contentLocale and market matches (unknown slug, not published in this language, withheld or revoked); there is no fallback to another language. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "contentLocale",
+          "market"
+        ],
+        "title": "get_card_offersArguments",
+        "type": "object"
+      },
+      "name": "get_card_offers",
+      "outputProperties": [
+        "contentLocale",
+        "currentOffers",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "outputRequired": [
+        "contentLocale",
+        "currentOffers",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "title": "Get current card offers"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get card benefits"
+      },
+      "description": "Get one credit card's benefits for one exact contentLocale and market, as served: rich benefit details (definition and summary, coverage tier and type, limits with amounts, units and periods, activation requirements, covered and excluded items, excluded scenarios, claim process, confidence, verification date, sources and excerpts) and simple benefit rows. null is unknown, never none or zero, and absence of a benefit here is not evidence the card lacks it. Accepts a canonical slug or a retired alias; the returned card slug is canonical. Returns an error when no card with an eligible publication for exactly this contentLocale and market matches (unknown slug, not published in this language, withheld or revoked); there is no fallback to another language. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "contentLocale",
+          "market"
+        ],
+        "title": "get_card_benefitsArguments",
+        "type": "object"
+      },
+      "name": "get_card_benefits",
+      "outputProperties": [
+        "benefits",
+        "card",
+        "cardBenefits",
+        "contentLocale",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "outputRequired": [
+        "benefits",
+        "card",
+        "cardBenefits",
+        "contentLocale",
+        "market",
+        "qualification",
+        "requestedSlug"
+      ],
+      "title": "Get card benefits"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get card earning rates"
+      },
+      "description": "Get one credit card's earning rates for one exact contentLocale and market, as served: each row's category, rate in its native rateUnit (points or miles per dollar, or percent cash back), conditions, cap period, effective window (effectiveFrom/effectiveTo) and, when served, typed rate components, thresholds, enrollment, promotional scope, minimum transaction, linked-account tier, dynamic categories and merchant inclusions or exclusions, with the card's reward currency and program. Rates in different units or programs are not comparable without a valuation Rewardopedia does not provide. Rows are those Rewardopedia records as current (isCurrent) and not ended: a row whose effectiveTo is before today's UTC date is not served (UTC can be ahead of the US local date). A missing effectiveTo is an unknown end, not proof the rate continues. null is unknown, never zero. Accepts a canonical slug or a retired alias; the returned card slug is canonical. Returns an error when no card with an eligible publication for exactly this contentLocale and market matches (unknown slug, not published in this language, withheld or revoked); there is no fallback to another language. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "contentLocale",
+          "market"
+        ],
+        "title": "get_earning_ratesArguments",
+        "type": "object"
+      },
+      "name": "get_earning_rates",
+      "outputProperties": [
+        "card",
+        "contentLocale",
+        "earningRates",
+        "market",
+        "qualification",
+        "requestedSlug",
+        "rewardCurrency",
+        "rewardProgram"
+      ],
+      "outputRequired": [
+        "card",
+        "contentLocale",
+        "earningRates",
+        "market",
+        "qualification",
+        "requestedSlug",
+        "rewardCurrency",
+        "rewardProgram"
+      ],
+      "title": "Get card earning rates"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get card fees"
+      },
+      "description": "Get one credit card's fees for one exact contentLocale and market, as served: each fee's type, amount with its own unit ('$95', '3%'), notes and waiver conditions. waivedFirstYear appears only when the source states it: absent is not false. unreportedFeeTypes lists fee types with no served row; each is unknown, never zero or waived. Accepts a canonical slug or a retired alias; the returned card slug is canonical. Returns an error when no card with an eligible publication for exactly this contentLocale and market matches (unknown slug, not published in this language, withheld or revoked); there is no fallback to another language. Each call is recorded in your Rewardopedia request history as interest (the search text with long numbers, credentials and links redacted, the filters or card slugs asked about, and the outcome), never as card ownership, and does not change saved context; inspect it with get_my_context and delete it with forget_my_context. A call that cannot be recorded returns an error, not results.",
+      "inputSchema": {
+        "properties": {
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "slug": {
+            "description": "Canonical card slug (as returned by search_cards) or a retired alias.",
+            "maxLength": 200,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "contentLocale",
+          "market"
+        ],
+        "title": "get_card_feesArguments",
+        "type": "object"
+      },
+      "name": "get_card_fees",
+      "outputProperties": [
+        "card",
+        "contentLocale",
+        "fees",
+        "market",
+        "qualification",
+        "requestedSlug",
+        "unreportedFeeTypes"
+      ],
+      "outputRequired": [
+        "card",
+        "contentLocale",
+        "fees",
+        "market",
+        "qualification",
+        "requestedSlug",
+        "unreportedFeeTypes"
+      ],
+      "title": "Get card fees"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Recommend credit cards"
+      },
+      "description": "Recommend credit cards for one exact contentLocale and market with Rewardopedia's shared qualitative method (card-qualitative-v1); Rewardopedia's API selects and orders the candidates and this tool never re-ranks them. goals uses vocabulary card-goals-v1 (cash_back, travel_rewards, dining, groceries, gas, hotel_loyalty, airline_loyalty, business_spending), highest priority first; an unsupported goal returns outcome needs_input with follow-up questions. Saved context is read on every call: remembered goals apply only when goals is empty, remembered wallet entries are added, and a constraint sent now replaces the remembered one. savedContextUsed is true exactly when contextRefs determined the answer; unappliedContextRefs names preferences and excluded issuers this method does not apply. Only cards with an eligible Rewardopedia publication for exactly this pair qualify. Hard constraints apply first and an unknown fact never satisfies one. Owned wallet cards are excluded. Omit wallet when it is unknown (wallet_baseline_incomplete). An empty wallet does not clear remembered cards. Returns limit candidates (default 3, at most 5) with reasons, drawbacks, offers (a composition lists every welcome-offer part in its own kind and unit, never added or converted), unknowns and publication identity; no dollar savings, approval odds or eligibility claims. Persistence: each call is recorded in your request history (top goal, contentLocale, market, those contextRefs and outcome; not the wallet, constraints or results) and changes no saved context. A call that cannot be recorded returns an error, not recommendations.",
+      "inputSchema": {
+        "$defs": {
+          "RecommendationConstraints": {
+            "additionalProperties": false,
+            "description": "Explicit hard constraints; an unknown card fact never satisfies one.",
+            "properties": {
+              "cardType": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "personal",
+                      "business"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Cardtype"
+              },
+              "maxAnnualFeeUsd": {
+                "anyOf": [
+                  {
+                    "maximum": 1000000.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  {
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,9}|(?=[\\d.]{1,12}0*$)\\d{0,9}\\.\\d{0,2}0*$)",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Maxannualfeeusd"
+              },
+              "noForeignTransactionFee": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Noforeigntransactionfee"
+              }
+            },
+            "title": "RecommendationConstraints",
+            "type": "object"
+          },
+          "WalletValue": {
+            "additionalProperties": false,
+            "properties": {
+              "cardSlug": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Cardslug"
+              },
+              "productName": {
+                "maxLength": 120,
+                "minLength": 1,
+                "title": "Productname",
+                "type": "string"
+              }
+            },
+            "required": [
+              "productName"
+            ],
+            "title": "WalletValue",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "constraints": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/RecommendationConstraints"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Explicit hard constraints only."
+          },
+          "contentLocale": {
+            "description": "Exact content locale: en-US (English) or es-US (Spanish).",
+            "enum": [
+              "en-US",
+              "es-US"
+            ],
+            "title": "Contentlocale",
+            "type": "string"
+          },
+          "goals": {
+            "default": [],
+            "description": "Goal tokens, highest priority first. Prose is refused.",
+            "items": {
+              "anyOf": [
+                {
+                  "description": "Goal vocabulary v1 (card-goals-v1). Order in the request is priority, highest first.",
+                  "enum": [
+                    "cash_back",
+                    "travel_rewards",
+                    "dining",
+                    "groceries",
+                    "gas",
+                    "hotel_loyalty",
+                    "airline_loyalty",
+                    "business_spending"
+                  ],
+                  "title": "SupportedGoal",
+                  "type": "string"
+                },
+                {
+                  "description": "Recognized but unsupported by card-qualitative-v1; yields needs_input.",
+                  "enum": [
+                    "credit_building",
+                    "balance_transfer",
+                    "intro_apr",
+                    "approval_odds",
+                    "dollar_savings"
+                  ],
+                  "title": "UnsupportedGoal",
+                  "type": "string"
+                },
+                {
+                  "description": "Any other goal token; never interpreted, yields needs_input.",
+                  "pattern": "^[a-z][a-z0-9_-]{0,79}$",
+                  "title": "OtherGoalToken",
+                  "type": "string"
+                }
+              ]
+            },
+            "maxItems": 10,
+            "title": "Goals",
+            "type": "array"
+          },
+          "limit": {
+            "default": 3,
+            "maximum": 5,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "market": {
+            "const": "US",
+            "description": "Market. Only US is supported.",
+            "title": "Market",
+            "type": "string"
+          },
+          "wallet": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/$defs/WalletValue"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Cards the customer owns now. Null stays unknown. An empty list adds remembered cards and does not clear them.",
+            "title": "Wallet"
+          }
+        },
+        "required": [
+          "contentLocale",
+          "market"
+        ],
+        "title": "recommend_cardsArguments",
+        "type": "object"
+      },
+      "name": "recommend_cards",
+      "outputProperties": [
+        "asOf",
+        "candidates",
+        "contentLocale",
+        "contextRefs",
+        "contextVersion",
+        "exclusions",
+        "followUpQuestions",
+        "goalVocabularyVersion",
+        "goals",
+        "market",
+        "methodologyVersion",
+        "outcome",
+        "savedContextUsed",
+        "unappliedContextRefs",
+        "unsupportedGoals",
+        "walletBaseline"
+      ],
+      "outputRequired": [
+        "asOf",
+        "candidates",
+        "contentLocale",
+        "contextVersion",
+        "exclusions",
+        "followUpQuestions",
+        "goals",
+        "market",
+        "outcome",
+        "savedContextUsed",
+        "unsupportedGoals"
+      ],
+      "title": "Recommend credit cards"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Get my saved context"
+      },
+      "description": "Show what Rewardopedia remembers for the signed-in customer: saved wallet cards, spending, goals, preferences, constraints and temporary plans, each with its entry ID, source request and time (removed entries are omitted; active is false for expired ones), plus one page of request history, newest first. contextVersion is the expectedVersion for update_my_context and forget_my_context. Page older history with before=nextBefore. The inspection itself is recorded in history.",
+      "inputSchema": {
+        "properties": {
+          "before": {
+            "anyOf": [
+              {
+                "maximum": 9223372036854775807,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "nextBefore from a previous page; omit for the newest.",
+            "title": "Before"
+          },
+          "pageSize": {
+            "default": 20,
+            "maximum": 50,
+            "minimum": 1,
+            "title": "Pagesize",
+            "type": "integer"
+          }
+        },
+        "title": "get_my_contextArguments",
+        "type": "object"
+      },
+      "name": "get_my_context",
+      "outputProperties": [
+        "asOf",
+        "contextVersion",
+        "entries",
+        "history",
+        "nextBefore"
+      ],
+      "outputRequired": [
+        "asOf",
+        "contextVersion",
+        "entries",
+        "history"
+      ],
+      "title": "Get my saved context"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Update my saved context"
+      },
+      "description": "Save facts the customer explicitly stated, as structured entries only (no free text, nothing inferred): wallet cards they own, monthly spending by category, goals, preferences, hard constraints, and temporary plans (plans require expiresAt). An entry is identified by kind and key: a new key adds an entry and leaves others unchanged; an existing key replaces that entry (use assertionType correction when the customer corrects it). removeIds removes entries by the IDs get_my_context returns; one call cannot both update and remove the same entry (refused, nothing changes). Hypotheticals, card searches and comparisons are not ownership: never save them as wallet entries. Never include card numbers, account numbers, passwords or other credentials; values that look like them are refused. requestId is a new UUID you choose for each distinct change; to retry the same change after an error or lost answer, send it again with the same requestId and expectedVersion (it is applied once; duplicate is true on the retry). expectedVersion is contextVersion from get_my_context. If saved context changed since then the call fails with version_conflict and nothing changes: call get_my_context again and decide what still applies; never resend automatically. The change is recorded in request history.",
+      "inputSchema": {
+        "$defs": {
+          "ConstraintUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Expiresat"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "constraint",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/ConstraintValue"
+              }
+            },
+            "required": [
+              "key",
+              "kind",
+              "value"
+            ],
+            "title": "ConstraintUpdate",
+            "type": "object"
+          },
+          "ConstraintValue": {
+            "additionalProperties": false,
+            "properties": {
+              "cardType": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "personal",
+                      "business"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Cardtype"
+              },
+              "excludedIssuers": {
+                "items": {
+                  "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "title": "Excludedissuers",
+                "type": "array"
+              },
+              "maxAnnualFeeUsd": {
+                "anyOf": [
+                  {
+                    "maximum": 1000000.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  {
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,9}|(?=[\\d.]{1,12}0*$)\\d{0,9}\\.\\d{0,2}0*$)",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Maxannualfeeusd"
+              },
+              "noForeignTransactionFee": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Noforeigntransactionfee"
+              }
+            },
+            "title": "ConstraintValue",
+            "type": "object"
+          },
+          "GoalUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Expiresat"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "goal",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/GoalValue"
+              }
+            },
+            "required": [
+              "key",
+              "kind",
+              "value"
+            ],
+            "title": "GoalUpdate",
+            "type": "object"
+          },
+          "GoalValue": {
+            "additionalProperties": false,
+            "properties": {
+              "goal": {
+                "pattern": "^[a-z][a-z0-9_-]{0,79}$",
+                "title": "Goal",
+                "type": "string"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "required": [
+              "goal"
+            ],
+            "title": "GoalValue",
+            "type": "object"
+          },
+          "PlanUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "format": "date-time",
+                "title": "Expiresat",
+                "type": "string"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "plan",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/PlanValue"
+              }
+            },
+            "required": [
+              "key",
+              "expiresAt",
+              "kind",
+              "value"
+            ],
+            "title": "PlanUpdate",
+            "type": "object"
+          },
+          "PlanValue": {
+            "additionalProperties": false,
+            "properties": {
+              "destinationCountry": {
+                "anyOf": [
+                  {
+                    "pattern": "^[A-Z]{2}$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Destinationcountry"
+              },
+              "needs": {
+                "items": {
+                  "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "minItems": 1,
+                "title": "Needs",
+                "type": "array"
+              }
+            },
+            "required": [
+              "needs"
+            ],
+            "title": "PlanValue",
+            "type": "object"
+          },
+          "PreferenceUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Expiresat"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "preference",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/PreferenceValue"
+              }
+            },
+            "required": [
+              "key",
+              "kind",
+              "value"
+            ],
+            "title": "PreferenceUpdate",
+            "type": "object"
+          },
+          "PreferenceValue": {
+            "additionalProperties": false,
+            "properties": {
+              "feature": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Feature",
+                "type": "string"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Priority"
+              }
+            },
+            "required": [
+              "feature"
+            ],
+            "title": "PreferenceValue",
+            "type": "object"
+          },
+          "SpendingUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Expiresat"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "spending",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/SpendingValue"
+              }
+            },
+            "required": [
+              "key",
+              "kind",
+              "value"
+            ],
+            "title": "SpendingUpdate",
+            "type": "object"
+          },
+          "SpendingValue": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Category",
+                "type": "string"
+              },
+              "currency": {
+                "const": "USD",
+                "default": "USD",
+                "title": "Currency",
+                "type": "string"
+              },
+              "monthlyAmount": {
+                "anyOf": [
+                  {
+                    "maximum": 1000000.0,
+                    "minimum": 0.0,
+                    "type": "number"
+                  },
+                  {
+                    "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,9}|(?=[\\d.]{1,12}0*$)\\d{0,9}\\.\\d{0,2}0*$)",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Monthlyamount"
+              }
+            },
+            "required": [
+              "category",
+              "monthlyAmount"
+            ],
+            "title": "SpendingValue",
+            "type": "object"
+          },
+          "WalletUpdate": {
+            "additionalProperties": false,
+            "properties": {
+              "assertionType": {
+                "default": "explicit",
+                "enum": [
+                  "explicit",
+                  "correction"
+                ],
+                "title": "Assertiontype",
+                "type": "string"
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Expiresat"
+              },
+              "key": {
+                "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                "title": "Key",
+                "type": "string"
+              },
+              "kind": {
+                "const": "wallet",
+                "title": "Kind",
+                "type": "string"
+              },
+              "value": {
+                "$ref": "#/$defs/WalletValue"
+              }
+            },
+            "required": [
+              "key",
+              "kind",
+              "value"
+            ],
+            "title": "WalletUpdate",
+            "type": "object"
+          },
+          "WalletValue": {
+            "additionalProperties": false,
+            "properties": {
+              "cardSlug": {
+                "anyOf": [
+                  {
+                    "pattern": "^[a-z][a-z0-9-]{0,79}$",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Cardslug"
+              },
+              "productName": {
+                "maxLength": 120,
+                "minLength": 1,
+                "title": "Productname",
+                "type": "string"
+              }
+            },
+            "required": [
+              "productName"
+            ],
+            "title": "WalletValue",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "expectedVersion": {
+            "description": "contextVersion from get_my_context.",
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "title": "Expectedversion",
+            "type": "integer"
+          },
+          "removeIds": {
+            "default": [],
+            "description": "Entry IDs (from get_my_context) to remove.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Removeids",
+            "type": "array"
+          },
+          "requestId": {
+            "description": "A UUID you choose for this change; reuse it only to retry it.",
+            "format": "uuid",
+            "title": "Requestid",
+            "type": "string"
+          },
+          "updates": {
+            "default": [],
+            "description": "Entries to add or replace, identified by kind and key.",
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "constraint": "#/$defs/ConstraintUpdate",
+                  "goal": "#/$defs/GoalUpdate",
+                  "plan": "#/$defs/PlanUpdate",
+                  "preference": "#/$defs/PreferenceUpdate",
+                  "spending": "#/$defs/SpendingUpdate",
+                  "wallet": "#/$defs/WalletUpdate"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/WalletUpdate"
+                },
+                {
+                  "$ref": "#/$defs/SpendingUpdate"
+                },
+                {
+                  "$ref": "#/$defs/GoalUpdate"
+                },
+                {
+                  "$ref": "#/$defs/PreferenceUpdate"
+                },
+                {
+                  "$ref": "#/$defs/ConstraintUpdate"
+                },
+                {
+                  "$ref": "#/$defs/PlanUpdate"
+                }
+              ]
+            },
+            "maxItems": 50,
+            "title": "Updates",
+            "type": "array"
+          }
+        },
+        "required": [
+          "requestId",
+          "expectedVersion"
+        ],
+        "title": "update_my_contextArguments",
+        "type": "object"
+      },
+      "name": "update_my_context",
+      "outputProperties": [
+        "appliedVersion",
+        "contextVersion",
+        "duplicate",
+        "requestId"
+      ],
+      "outputRequired": [
+        "appliedVersion",
+        "contextVersion",
+        "duplicate",
+        "requestId"
+      ],
+      "title": "Update my saved context"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false,
+        "readOnlyHint": false,
+        "title": "Forget my saved context"
+      },
+      "description": "Permanently delete saved context and history. all=true deletes every saved entry and every history entry. Otherwise entryIds deletes those entries and requestIds deletes those history entries plus the entries they created or changed; every history entry recorded while a deleted entry existed is deleted too (so later unrelated calls go with it). Selective forgetting also clears free text and proposed updates from all remaining history. Deleted requests can never be replayed. requestId is a new UUID you choose for each distinct change; to retry the same change after an error or lost answer, send it again with the same requestId and expectedVersion (it is applied once; duplicate is true on the retry). expectedVersion is contextVersion from get_my_context. If saved context changed since then the call fails with version_conflict and nothing changes: call get_my_context again and decide what still applies; never resend automatically. Provider backups follow Rewardopedia's disclosed retention; this does not delete the Rewardopedia account.",
+      "inputSchema": {
+        "properties": {
+          "all": {
+            "default": false,
+            "description": "true deletes all saved context and history.",
+            "title": "All",
+            "type": "boolean"
+          },
+          "entryIds": {
+            "default": [],
+            "description": "Saved entry IDs to delete.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Entryids",
+            "type": "array"
+          },
+          "expectedVersion": {
+            "description": "contextVersion from get_my_context.",
+            "maximum": 9223372036854775807,
+            "minimum": 0,
+            "title": "Expectedversion",
+            "type": "integer"
+          },
+          "requestId": {
+            "description": "A UUID you choose for this change; reuse it only to retry it.",
+            "format": "uuid",
+            "title": "Requestid",
+            "type": "string"
+          },
+          "requestIds": {
+            "default": [],
+            "description": "History request IDs to delete.",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Requestids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "requestId",
+          "expectedVersion"
+        ],
+        "title": "forget_my_contextArguments",
+        "type": "object"
+      },
+      "name": "forget_my_context",
+      "outputProperties": [
+        "appliedVersion",
+        "contextVersion",
+        "duplicate",
+        "requestId"
+      ],
+      "outputRequired": [
+        "appliedVersion",
+        "contextVersion",
+        "duplicate",
+        "requestId"
+      ],
+      "title": "Forget my saved context"
+    }
+  ]
+}
