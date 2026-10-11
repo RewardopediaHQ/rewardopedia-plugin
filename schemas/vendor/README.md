@@ -6,14 +6,14 @@ silently.
 | Directory | Upstream | Upstream commit | Retrieved | License |
 | --- | --- | --- | --- | --- |
 | `agent-plugins-1.0.0/` | [agent-plugins.org/schemas/1.0.0](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json), source [agentplugins/agent-plugins-spec](https://github.com/agentplugins/agent-plugins-spec/tree/main/schemas/1.0.0) | `d92e6f443b8edcea42c039727a82afdc565779e2` | 2026-09-27 | Apache-2.0 ([`LICENSE-Apache-2.0.txt`](agent-plugins-1.0.0/LICENSE-Apache-2.0.txt)) |
-| `rewardopedia-mcp/` | Rewardopedia MCP server tool contract, exported from the private Rewardopedia monorepo (`apps/mcp-server`) | `c0ff0afeb28386e08441122b2fd18995bfc8edc7` | 2026-10-10 | MIT (this repository) |
+| `rewardopedia-mcp/` | Rewardopedia MCP server tool contract, exported from the private Rewardopedia monorepo (`apps/mcp-server`) | `7fb34f0e1ec921d150bf1a4bca4b01cf629910f0` | 2026-10-11 | MIT (this repository) |
 
 SHA-256 of the vendored files:
 
 ```text
 0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883  agent-plugins-1.0.0/plugin.schema.json
 6539175bfcdf43085855183e86da40ea94b166547a72b47ae9a0a390516d3acb  agent-plugins-1.0.0/mcp.schema.json
-23e2a06c7208825ac1a6aad3910f5a5d4330fe720ba500ed22046cb7a100d923  rewardopedia-mcp/tools.json
+7ca5db9fe58e395f273bad1e1b937e65f9be08903ee781d614316db7c8b16027  rewardopedia-mcp/tools.json
 ```
 
 The validator checks these hashes. To update, download the new upstream files,

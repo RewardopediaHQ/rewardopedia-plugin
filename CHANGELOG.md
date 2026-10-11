@@ -38,6 +38,14 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- `recommend_cards` follows the server's `card-qualitative-v2` method
+  (monorepo #3545). Recognized but unassessed goals sent beside a supported
+  goal are listed in `unassessedGoals` instead of blocking the answer. A stated
+  first-year annual-fee waiver passes `maxAnnualFeeUsd` with an
+  `annualFeeWaiverNote`. Ties are ordered by comparable always-on rate,
+  complementary benefits, then lower known ongoing fee. The skill, tool
+  reference and examples are updated, and the tool contract is re-exported
+  from monorepo `7fb34f0`.
 - Deletion guidance, including the README summary, no longer promises a
   pre-release backup disclosure: deleted data can remain in backups until they
   expire, and retention questions or full account deletion go to
