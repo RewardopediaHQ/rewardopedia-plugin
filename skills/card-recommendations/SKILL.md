@@ -55,7 +55,7 @@ share one anyway, do not pass it to any tool.
    used. Do not guess a goal from a vague request such as "the best card". If
    the user wants something the tool does not support, such as building credit,
    say that Rewardopedia shortlists do not cover it rather than substituting a
-   supported goal. If the result lists `unassessedGoals`, say those goals were
+   supported goal. If `unassessedGoals` is not empty, say those goals were
    not assessed. Never send the user's words as a goal: free-form prose is
    rejected as invalid input. When unsure, ask, or call without a goal and ask
    the returned `needs_input` follow-up questions (each has a `code` and, where
