@@ -38,6 +38,11 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Deletion guidance, including the README summary, no longer promises a
+  pre-release backup disclosure: deleted data can remain in backups until they
+  expire, and retention questions or full account deletion go to
+  info@rewardopedia.com (monorepo #3544). Tool contract re-exported from
+  monorepo `c0ff0af`.
 - Resynchronised the skill, tool reference, privacy guide and examples with
   the server's current contract:
   - `recommend_cards` needs `cards:read` and `context:read` only, accepts no

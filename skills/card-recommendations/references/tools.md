@@ -219,5 +219,6 @@ changed. Every history entry recorded while a deleted entry existed is deleted
 too, so later unrelated calls can go with it. Selective forgetting also clears
 free text and proposed updates from all remaining history. Deleted requests can
 never be replayed. Confirm the scope with the user first. This does not delete
-the Rewardopedia account. Removal from service backups is not immediate; its
-limits will be published in the privacy guide before release.
+the Rewardopedia account. Deleted data can remain in service backups until
+they expire; for retention questions or full account deletion, the user emails
+info@rewardopedia.com.

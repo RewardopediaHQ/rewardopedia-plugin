@@ -58,8 +58,9 @@ connect with that account.
 - Saved facts and request history are kept until you delete them or your
   account.
 - Ask your assistant what Rewardopedia remembers at any time, and ask it to
-  forget some or all of it. Deletion is permanent in the live service; backup
-  retention limits will be published before release.
+  forget some or all of it. Deletion is permanent in the live service; deleted
+  data can remain in backups until they expire. For retention questions or to
+  delete your account entirely, email info@rewardopedia.com.
 
 Read the full [privacy, memory, retention and deletion guide](docs/privacy-and-memory.md)
 before connecting.
