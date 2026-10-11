@@ -87,9 +87,10 @@ outcome codes, status and timing, not your inputs or credentials.
 ## Backups
 
 Deletion takes effect in the live service. Copies inside service backups are
-not removed immediately. The maximum backup retention period and how restores
-honour deletions are to be published here before release; until then, assume
-deleted data can remain in backups for a period that has not yet been measured.
+not removed immediately: deleted data can remain in backups until they expire.
+The maximum backup retention period and how restores honour deletions have not
+been measured or published yet. For retention questions or to delete your
+Rewardopedia account entirely, email info@rewardopedia.com.
 
 ## Permissions you grant
 
