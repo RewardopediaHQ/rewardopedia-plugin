@@ -1,8 +1,7 @@
 # Privacy, memory, retention and deletion
 
 Status: pre-release. This describes how the Rewardopedia MCP service is designed
-to handle your data for version 0.1.0. The service is not yet live, and the
-measured values marked "to be published" will be added before release.
+to handle your data for version 0.1.0. The service is not yet live.
 
 Read this before you connect an assistant to Rewardopedia.
 
@@ -79,10 +78,11 @@ outcome codes, status and timing, not your inputs or credentials.
   be deleted with it, and clears search text from your remaining history.
   Deleted requests can never be replayed to save the information again.
   Repeating a deletion is safe.
-- **Delete your account:** deleting your Rewardopedia account (instructions to
-  be published before release) erases your saved context, history and stored
-  identity. Only a one-way hashed marker of the deleted sign-in identity is
-  kept, so that identity cannot be used again to write to the deleted account.
+- **Delete your account:** deleting your Rewardopedia account erases your saved
+  context, history and stored identity. Only a one-way hashed marker of the
+  deleted sign-in identity is kept, so that identity cannot be used again to
+  write to the deleted account. To delete your account entirely, email
+  info@rewardopedia.com.
 
 ## Backups
 

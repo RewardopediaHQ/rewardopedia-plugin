@@ -119,6 +119,22 @@ def test_readme_must_name_the_endpoint(repo: Path) -> None:
     assert any("must name the endpoint" in e for e in errors(content.check_readme(repo)))
 
 
+def test_deletion_guidance_names_the_contact(repo: Path) -> None:
+    assert errors(content.check_deletion_guidance(repo)) == []
+    replace_text(repo, "README.md", "info@rewardopedia.com", "support@example.com")
+    assert any("info@rewardopedia.com" in e for e in errors(content.check_deletion_guidance(repo)))
+
+
+def test_deletion_guidance_must_not_promise_an_unpublished_policy(repo: Path) -> None:
+    replace_text(
+        repo,
+        "docs/privacy-and-memory.md",
+        "have not\nbeen measured or published yet",
+        "will be published before release",
+    )
+    assert any("before release" in e for e in errors(content.check_deletion_guidance(repo)))
+
+
 GUIDE = "docs/clients/chatgpt.md"
 
 

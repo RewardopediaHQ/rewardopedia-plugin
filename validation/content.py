@@ -178,6 +178,45 @@ def check_tools_doc(root: Path) -> list[Finding]:
     return findings
 
 
+# User-facing deletion guidance. These must not cite a retention policy that is
+# not published, or promise that one will appear before release (#3544).
+DELETION_GUIDES = (
+    "README.md",
+    "docs/privacy-and-memory.md",
+    TOOLS_DOC,
+)
+RETENTION_CONTACT = "info@rewardopedia.com"
+UNPUBLISHED_RETENTION = ("disclosed retention", "before release")
+
+
+def check_deletion_guidance(root: Path) -> list[Finding]:
+    """Retention and full deletion go to the contact address, not an unpublished policy."""
+    findings: list[Finding] = []
+    for relative in DELETION_GUIDES:
+        text = read_text(root, relative)
+        if text is None:
+            findings.append(Finding(CHECK, relative, "deletion guidance is missing"))
+            continue
+        if RETENTION_CONTACT not in text:
+            findings.append(
+                Finding(
+                    CHECK,
+                    relative,
+                    f"retention and account-deletion questions must name {RETENTION_CONTACT}",
+                )
+            )
+        for phrase in UNPUBLISHED_RETENTION:
+            if phrase in text:
+                findings.append(
+                    Finding(
+                        CHECK,
+                        relative,
+                        f"must not promise an unpublished retention disclosure ({phrase!r})",
+                    )
+                )
+    return findings
+
+
 def check_readme(root: Path) -> list[Finding]:
     text = read_text(root, "README.md")
     if text is None:
@@ -272,6 +311,7 @@ def check(root: Path) -> list[Finding]:
         *check_endpoint_references(root),
         *check_tools_doc(root),
         *check_readme(root),
+        *check_deletion_guidance(root),
         *check_examples_synthetic(root),
         *check_examples_notice(root),
     ]
