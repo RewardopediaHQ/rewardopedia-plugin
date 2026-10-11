@@ -131,7 +131,7 @@ absent is not `false`.
 
 ### `recommend_cards`
 
-Return a qualitative shortlist for one pair with the `card-qualitative-v1`
+Return a qualitative shortlist for one pair with the `card-qualitative-v2`
 method. Requires `cards:read` and `context:read`. Rewardopedia's API selects and
 orders candidates; the tool never re-ranks them.
 
@@ -142,10 +142,13 @@ orders candidates; the tool never re-ranks them.
   (default 3, at most 5).
 - **Goals.** Vocabulary `card-goals-v1`: `cash_back`, `travel_rewards`,
   `dining`, `groceries`, `gas`, `hotel_loyalty`, `airline_loyalty` and
-  `business_spending`. Unsupported tokens (`credit_building`,
-  `balance_transfer`, `intro_apr`, `approval_odds`, `dollar_savings` or any
-  other token) are not interpreted: the outcome is `needs_input` with
-  follow-up questions. Free-form prose is refused as invalid input.
+  `business_spending`. The recognized but unassessed goals (`credit_building`,
+  `balance_transfer`, `intro_apr`, `approval_odds`, `dollar_savings`) sent
+  next to a supported goal are listed in `unassessedGoals`, and the answer
+  covers only the supported goals; tell the user those goals were not
+  assessed. With no supported goal, or any other token, the outcome is
+  `needs_input` with follow-up questions. Free-form prose is refused as
+  invalid input.
 - **Saved context.** Saved context is read on every call. Remembered goals
   apply only when `goals` is empty; remembered wallet cards are added (an
   empty `wallet` does not clear them); a constraint sent now replaces the
@@ -154,12 +157,20 @@ orders candidates; the tool never re-ranks them.
   answer; `unappliedContextRefs` names saved preferences and excluded issuers
   this method does not apply.
 - **Hard constraints** apply first. A card whose relevant fact is unknown does
-  not pass the constraint.
+  not pass the constraint. A known dollar annual fee with a stated first-year
+  waiver (`waivedFirstYear: true`) passes `maxAnnualFeeUsd`. When that waiver
+  is what let the card through, `annualFeeWaiverNote` names the ongoing fee
+  and the limit; say the first year is free and give that ongoing fee.
 - **Wallet.** Owned cards are excluded. Cards that cannot be resolved leave
   the result marked `wallet_baseline_incomplete`.
-- **Ordering.** Goal matches first, then complementary benefits, then a stable
-  identifier for ties. Each candidate's `rank` (1 to 5) is this methodology
-  order, not a quality score: never present `rank` 1 as "the best" or "#1".
+- **Ordering.** Goal matches first; then the higher always-on earning rate
+  on the top matched goal, compared only within cash back or within the same
+  rewards program and unit. A card with no comparable rate keeps its place,
+  so an unknown rate never ranks below a known one, and no rate counts until
+  typed rate data marks it always-on. Then complementary benefits; then the
+  lower known ongoing annual fee, unknown last; then a stable identifier.
+  Each candidate's `rank` (1 to 5) is this methodology order, not a quality
+  score: never present `rank` 1 as "the best" or "#1".
 - **Output.** `outcome` (`recommendations`, `needs_input` or
   `no_qualified_candidates`), candidates with matched and unmatched goals,
   facts, reasons, drawbacks, current offers (with any `composition`), unknowns

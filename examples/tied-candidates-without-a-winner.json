@@ -40,7 +40,7 @@
       "outcome": "recommendations",
       "result": {
         "outcome": "recommendations",
-        "methodologyVersion": "card-qualitative-v1",
+        "methodologyVersion": "card-qualitative-v2",
         "contentLocale": "en-US",
         "market": "US",
         "contextVersion": 0,
@@ -49,6 +49,7 @@
           "dining"
         ],
         "unsupportedGoals": [],
+        "unassessedGoals": [],
         "candidates": [
           {
             "rank": 1,

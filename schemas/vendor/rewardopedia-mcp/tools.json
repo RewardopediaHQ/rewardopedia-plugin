@@ -1,5 +1,5 @@
 {
-  "commit": "c0ff0afeb28386e08441122b2fd18995bfc8edc7",
+  "commit": "7fb34f0e1ec921d150bf1a4bca4b01cf629910f0",
   "source": "MehdiZare/rewardopedia-mono-repo",
   "tools": [
     {
@@ -551,7 +551,7 @@
         "readOnlyHint": false,
         "title": "Recommend credit cards"
       },
-      "description": "Recommend credit cards for one exact contentLocale and market with Rewardopedia's shared qualitative method (card-qualitative-v1); Rewardopedia's API selects and orders the candidates and this tool never re-ranks them. goals uses vocabulary card-goals-v1 (cash_back, travel_rewards, dining, groceries, gas, hotel_loyalty, airline_loyalty, business_spending), highest priority first; an unsupported goal returns outcome needs_input with follow-up questions. Saved context is read on every call: remembered goals apply only when goals is empty, remembered wallet entries are added, and a constraint sent now replaces the remembered one. savedContextUsed is true exactly when contextRefs determined the answer; unappliedContextRefs names preferences and excluded issuers this method does not apply. Only cards with an eligible Rewardopedia publication for exactly this pair qualify. Hard constraints apply first and an unknown fact never satisfies one. Owned wallet cards are excluded. Omit wallet when it is unknown (wallet_baseline_incomplete). An empty wallet does not clear remembered cards. Returns limit candidates (default 3, at most 5) with reasons, drawbacks, offers (a composition lists every welcome-offer part in its own kind and unit, never added or converted), unknowns and publication identity; no dollar savings, approval odds or eligibility claims. Persistence: each call is recorded in your request history (top goal, contentLocale, market, those contextRefs and outcome; not the wallet, constraints or results) and changes no saved context. A call that cannot be recorded returns an error, not recommendations.",
+      "description": "Recommend credit cards for one exact contentLocale and market with Rewardopedia's shared qualitative method (card-qualitative-v2); Rewardopedia's API selects and orders the candidates and this tool never re-ranks them. goals uses vocabulary card-goals-v1 (cash_back, travel_rewards, dining, groceries, gas, hotel_loyalty, airline_loyalty, business_spending), highest priority first. A recognized unsupported goal (credit_building, balance_transfer, intro_apr, approval_odds, dollar_savings) next to a supported one is listed in unassessedGoals and the answer covers the supported goals only; with no supported goal, or any other token, outcome is needs_input with follow-up questions. Saved context is read on every call: remembered goals apply only when goals is empty, remembered wallet entries are added, and a constraint sent now replaces the remembered one. savedContextUsed is true exactly when contextRefs determined the answer; unappliedContextRefs names preferences and excluded issuers this method does not apply. Only cards with an eligible Rewardopedia publication for exactly this pair qualify. Hard constraints apply first and an unknown fact never satisfies one; a stated first-year annual-fee waiver passes a fee limit with annualFeeWaiverNote naming the ongoing fee. Owned wallet cards are excluded. Omit wallet when it is unknown (wallet_baseline_incomplete). An empty wallet does not clear remembered cards. Returns limit candidates (default 3, at most 5) with reasons, drawbacks, offers (a composition lists every welcome-offer part in its own kind and unit, never added or converted), unknowns and publication identity; no dollar savings, approval odds or eligibility claims. Persistence: each call is recorded in your request history (top goal, contentLocale, market, those contextRefs and outcome; not the wallet, constraints or results) and changes no saved context. A call that cannot be recorded returns an error, not recommendations.",
       "inputSchema": {
         "$defs": {
           "RecommendationConstraints": {
@@ -681,7 +681,7 @@
                   "type": "string"
                 },
                 {
-                  "description": "Recognized but unsupported by card-qualitative-v1; yields needs_input.",
+                  "description": "Recognized but not assessed by card-qualitative-v2. Beside a supported goal it is reported in unassessedGoals; alone it yields needs_input.",
                   "enum": [
                     "credit_building",
                     "balance_transfer",
@@ -758,6 +758,7 @@
         "outcome",
         "savedContextUsed",
         "unappliedContextRefs",
+        "unassessedGoals",
         "unsupportedGoals",
         "walletBaseline"
       ],

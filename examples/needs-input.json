@@ -39,6 +39,7 @@
         "savedContextUsed": false,
         "goals": [],
         "unsupportedGoals": [],
+        "unassessedGoals": [],
         "candidates": [],
         "exclusions": [],
         "followUpQuestions": [
