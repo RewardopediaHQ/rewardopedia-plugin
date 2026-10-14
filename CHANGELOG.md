@@ -40,9 +40,10 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 - Backup disclosure (owner decision, monorepo #3544): deletion from
   Rewardopedia is immediate, and provider backup copies roll off automatically
-  within about 8 days. The README, privacy guide, tool reference and
-  `forget_my_context` contract say the same; the contract is re-exported from
-  monorepo `b873973`.
+  within about 8 days. The README, privacy guide, tool reference, Spanish
+  forget example and `forget_my_context` contract say the same, and retention
+  questions or full account deletion go to info@rewardopedia.com. The contract
+  is re-exported from monorepo `b873973`.
 - `recommend_cards` follows the server's `card-qualitative-v2` method
   (monorepo #3545). Recognized but unassessed goals sent beside a supported
   goal are listed in `unassessedGoals` instead of blocking the answer. A stated
@@ -51,11 +52,6 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
   complementary benefits, then lower known ongoing fee. The skill, tool
   reference and examples are updated, and the tool contract is re-exported
   from monorepo `7fb34f0`.
-- Deletion guidance, including the README summary, no longer promises a
-  pre-release backup disclosure: deleted data can remain in backups until they
-  expire, and retention questions or full account deletion go to
-  info@rewardopedia.com (monorepo #3544). Tool contract re-exported from
-  monorepo `c0ff0af`.
 - Resynchronised the skill, tool reference, privacy guide and examples with
   the server's current contract:
   - `recommend_cards` needs `cards:read` and `context:read` only, accepts no
