@@ -42,8 +42,9 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
   Rewardopedia is immediate, and provider backup copies roll off automatically
   within about 8 days. The README, privacy guide, tool reference, Spanish
   forget example and `forget_my_context` contract say the same, and retention
-  questions or full account deletion go to info@rewardopedia.com. The contract
-  is re-exported from monorepo `b873973`.
+  questions or full account deletion go to info@rewardopedia.com. Validation
+  rejects a Spanish forget reply that drops that disclosure or says the window
+  is unpublished. The contract is re-exported from monorepo `b873973`.
 - `recommend_cards` follows the server's `card-qualitative-v2` method
   (monorepo #3545). Recognized but unassessed goals sent beside a supported
   goal are listed in `unassessedGoals` instead of blocking the answer. A stated
