@@ -1,5 +1,5 @@
 {
-  "commit": "7fb34f0e1ec921d150bf1a4bca4b01cf629910f0",
+  "commit": "8c35bbf6ea4a1c1baa5ad3effd9cb859ab5b9b56",
   "source": "MehdiZare/rewardopedia-mono-repo",
   "tools": [
     {
@@ -1434,7 +1434,7 @@
         "readOnlyHint": false,
         "title": "Forget my saved context"
       },
-      "description": "Permanently delete saved context and history. all=true deletes every saved entry and every history entry. Otherwise entryIds deletes those entries and requestIds deletes those history entries plus the entries they created or changed; every history entry recorded while a deleted entry existed is deleted too (so later unrelated calls go with it). Selective forgetting also clears free text and proposed updates from all remaining history. Deleted requests can never be replayed. requestId is a new UUID you choose for each distinct change; to retry the same change after an error or lost answer, send it again with the same requestId and expectedVersion (it is applied once; duplicate is true on the retry). expectedVersion is contextVersion from get_my_context. If saved context changed since then the call fails with version_conflict and nothing changes: call get_my_context again and decide what still applies; never resend automatically. Deleted data can remain in provider backups until they expire; this does not delete the Rewardopedia account. For retention questions or full account deletion, email info@rewardopedia.com.",
+      "description": "Permanently delete saved context and history. all=true deletes every saved entry and every history entry. Otherwise entryIds deletes those entries and requestIds deletes those history entries plus the entries they created or changed; every history entry recorded while a deleted entry existed is deleted too (so later unrelated calls go with it). Selective forgetting also clears free text and proposed updates from all remaining history. Deleted requests can never be replayed. requestId is a new UUID you choose for each distinct change; to retry the same change after an error or lost answer, send it again with the same requestId and expectedVersion (it is applied once; duplicate is true on the retry). expectedVersion is contextVersion from get_my_context. If saved context changed since then the call fails with version_conflict and nothing changes: call get_my_context again and decide what still applies; never resend automatically. Deletion from Rewardopedia is immediate; provider backup copies roll off automatically within about 8 days. This does not delete the Rewardopedia account. For retention questions or full account deletion, email info@rewardopedia.com.",
       "inputSchema": {
         "properties": {
           "all": {

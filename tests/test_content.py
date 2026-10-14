@@ -129,7 +129,7 @@ def test_deletion_guidance_must_not_promise_an_unpublished_policy(repo: Path) ->
     replace_text(
         repo,
         "docs/privacy-and-memory.md",
-        "have not\nbeen measured or published yet",
+        "roll off automatically within\nabout 8 days",
         "will be published before release",
     )
     assert any("before release" in e for e in errors(content.check_deletion_guidance(repo)))

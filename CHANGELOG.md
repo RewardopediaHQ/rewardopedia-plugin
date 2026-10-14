@@ -38,6 +38,12 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Backup disclosure (owner decision, monorepo #3544): deletion from
+  Rewardopedia is immediate, and provider backup copies roll off automatically
+  within about 8 days. The privacy guide also says a restore reapplies later
+  deletions before saved context is available again. The README, tool reference
+  and `forget_my_context` contract say the same; the contract is re-exported
+  from monorepo `8c35bbf`.
 - `recommend_cards` follows the server's `card-qualitative-v2` method
   (monorepo #3545). Recognized but unassessed goals sent beside a supported
   goal are listed in `unassessedGoals` instead of blocking the answer. A stated
