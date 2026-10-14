@@ -88,10 +88,8 @@ outcome codes, status and timing, not your inputs or credentials.
 
 Deletion from Rewardopedia is immediate; provider backup copies roll off
 automatically within about 8 days (backups are kept for 7 days; measured in
-October 2026 and re-measured whenever backup settings change). If a backup is
-ever restored,
-deletions made since that backup are reapplied before saved context is available
-again. For retention questions or to delete your Rewardopedia account entirely,
+October 2026 and re-measured whenever backup settings change). For retention
+questions or to delete your Rewardopedia account entirely,
 email info@rewardopedia.com.
 
 ## Permissions you grant
