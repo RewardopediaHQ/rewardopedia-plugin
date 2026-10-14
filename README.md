@@ -76,6 +76,11 @@ stored in this package.
 | `context:read` | Read your saved context and history, and use saved facts in recommendations |
 | `context:write` | Save, correct and delete your saved context |
 
+ChatGPT is also granted `openid`, `email` and `profile`. Signing in shares your
+name, username, avatar and email address with ChatGPT. The consent screen lists
+them before you approve. Those identity scopes are not granted to other clients
+(owner decision, monorepo #3529).
+
 ## Connect an assistant
 
 All guides are **unverified** until each client passes a live test; see the

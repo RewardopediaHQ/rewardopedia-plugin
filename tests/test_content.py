@@ -149,6 +149,25 @@ def test_spanish_forget_example_states_the_approved_disclosure(repo: Path) -> No
     assert any("aún no se ha publicado" in e for e in found)
 
 
+def test_chatgpt_identity_scopes_are_disclosed(repo: Path) -> None:
+    assert errors(content.check_chatgpt_identity_scopes(repo)) == []
+    replace_text(
+        repo,
+        "docs/clients/chatgpt.md",
+        "Signing in shares your name, username, avatar and email address\n  with ChatGPT.",
+        "Whether Rewardopedia enables them is an open owner decision.",
+    )
+    replace_text(
+        repo,
+        "docs/clients/chatgpt.md",
+        "Signing in shares your name, username,\n   avatar and email address with ChatGPT.",
+        "The identity grant is still an open owner decision.",
+    )
+    found = errors(content.check_chatgpt_identity_scopes(repo))
+    assert any("chatgpt.md" in e and "name, username, avatar and email address" in e for e in found)
+    assert any("chatgpt.md" in e and "open owner decision" in e for e in found)
+
+
 def test_deletion_guidance_must_not_promise_an_unpublished_policy(repo: Path) -> None:
     replace_text(
         repo,

@@ -48,7 +48,10 @@ and how to inspect or delete saved context.
 6. Review the risk warning, select **I understand and want to continue**, then
    **Create as a plugin**, and review the tools ChatGPT discovered.
 7. When prompted, sign in to Rewardopedia and review the requested
-   permissions: `cards:read`, `context:read` and `context:write`.
+   permissions: `openid`, `email` and `profile`, plus `cards:read`,
+   `context:read` and `context:write`. Signing in shares your name, username,
+   avatar and email address with ChatGPT. The consent screen lists them
+   before you approve.
 8. Start a new chat, type `@` in the prompt box and select Rewardopedia.
 
 ## Try it
