@@ -74,8 +74,9 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
     outcome.
 - Removed the incorrect claim that saved context accepts free-text notes.
 - Client guides rechecked against official documentation on 2026-10-10:
-  - ChatGPT uses **Add custom MCP server**; its OpenID scope request is an open
-    owner decision.
+  - ChatGPT uses **Add custom MCP server**, and Rewardopedia grants it the
+    OpenID scopes (`openid`, `email`, `profile`; owner decision, monorepo
+    #3529).
   - Claude uses **Use Claude's published identity**.
   - Perplexity uses a public client ID with no secret.
   - Sign-in from Claude Code, Codex, the ChatGPT desktop app and Grok Build is

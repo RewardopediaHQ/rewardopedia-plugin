@@ -14,7 +14,7 @@ against official documentation on 2026-10-10.
 
 | Client | Tested surface | Account prerequisites | Status | Verification date | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| [ChatGPT](clients/chatgpt.md) | none yet (target: chatgpt.com web, developer-mode custom MCP server) | Plan and workspace policy that allow developer mode; OpenAI documents read/fetch-only MCP for Pro and full MCP for Business, Enterprise and Edu; ChatGPT's OpenID scope request is an open owner decision; Rewardopedia account | Unverified | not yet verified | none |
+| [ChatGPT](clients/chatgpt.md) | none yet (target: chatgpt.com web, developer-mode custom MCP server) | Plan and workspace policy that allow developer mode; OpenAI documents read/fetch-only MCP for Pro and full MCP for Business, Enterprise and Edu; ChatGPT receives the OpenID scopes (name, username, avatar and email); Rewardopedia account | Unverified | not yet verified | none |
 | [Claude](clients/claude.md) | none yet (target: claude.ai custom connector using Claude's published identity) | Free (one custom connector), Pro, Max, Team or Enterprise; Team and Enterprise need an Owner to add it; Rewardopedia account | Unverified | not yet verified | none |
 | [Grok](clients/grok.md) | none yet (target: grok.com custom MCP connector) | Grok account; Business and Enterprise need admin provisioning; OAuth client registration pending; Rewardopedia account | Unverified | not yet verified | none |
 | [Perplexity](clients/perplexity.md) | none yet (target: perplexity.ai custom remote connector) | Pro, Max or Enterprise; public OAuth client ID pending (no secret); Rewardopedia account | Unverified | not yet verified | none |
