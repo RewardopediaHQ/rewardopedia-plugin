@@ -136,6 +136,19 @@ def test_deletion_guidance_states_the_measured_backup_window(repo: Path) -> None
     assert any("about 8 days" in e for e in errors(content.check_deletion_guidance(repo)))
 
 
+def test_spanish_forget_example_states_the_approved_disclosure(repo: Path) -> None:
+    assert errors(content.check_spanish_forget_disclosure(repo)) == []
+    replace_text(
+        repo,
+        "examples/correct-and-forget.json",
+        "en un plazo de unos 8 días",
+        "aún no se ha publicado",
+    )
+    found = errors(content.check_spanish_forget_disclosure(repo))
+    assert any("approved backup disclosure" in e for e in found)
+    assert any("aún no se ha publicado" in e for e in found)
+
+
 def test_deletion_guidance_must_not_promise_an_unpublished_policy(repo: Path) -> None:
     replace_text(
         repo,

@@ -192,6 +192,15 @@ APPROVED_BACKUP_DISCLOSURE = (
     "Deletion from Rewardopedia is immediate; provider backup copies roll off "
     "automatically within about 8 days"
 )
+# Owner-approved 2026-10-14 Spanish rendering of that sentence for the es-US example.
+FORGET_EXAMPLE = "examples/correct-and-forget.json"
+SPANISH_BACKUP_DISCLOSURE = (
+    "El borrado en Rewardopedia es inmediato; las copias de seguridad del "
+    "proveedor se eliminan automáticamente en un plazo de unos 8 días. "
+    "Esto no borra tu cuenta de Rewardopedia; para borrarla o si tienes "
+    "preguntas sobre la conservación de datos, escribe a info@rewardopedia.com."
+)
+UNPUBLISHED_SPANISH_WINDOW = "aún no se ha publicado"
 
 
 def check_deletion_guidance(root: Path) -> list[Finding]:
@@ -228,6 +237,33 @@ def check_deletion_guidance(root: Path) -> list[Finding]:
                     "provider backup copies roll off within about 8 days",
                 )
             )
+    return findings
+
+
+def check_spanish_forget_disclosure(root: Path) -> list[Finding]:
+    """The es-US forget reply carries the approved disclosure, not an unpublished window."""
+    text = read_text(root, FORGET_EXAMPLE)
+    if text is None:
+        return [Finding(CHECK, FORGET_EXAMPLE, "Spanish forget example is missing")]
+    findings: list[Finding] = []
+    if SPANISH_BACKUP_DISCLOSURE not in " ".join(text.split()):
+        findings.append(
+            Finding(
+                CHECK,
+                FORGET_EXAMPLE,
+                "es-US forget reply must state the approved backup disclosure: deletion is "
+                "immediate, provider backups roll off within about 8 days, and account "
+                f"deletion goes to {RETENTION_CONTACT}",
+            )
+        )
+    if UNPUBLISHED_SPANISH_WINDOW in text:
+        findings.append(
+            Finding(
+                CHECK,
+                FORGET_EXAMPLE,
+                f"must not say the backup window is unpublished ({UNPUBLISHED_SPANISH_WINDOW!r})",
+            )
+        )
     return findings
 
 
@@ -326,6 +362,7 @@ def check(root: Path) -> list[Finding]:
         *check_tools_doc(root),
         *check_readme(root),
         *check_deletion_guidance(root),
+        *check_spanish_forget_disclosure(root),
         *check_examples_synthetic(root),
         *check_examples_notice(root),
     ]
