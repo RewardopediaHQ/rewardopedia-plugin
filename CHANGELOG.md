@@ -43,7 +43,7 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
   within about 8 days. The privacy guide also says a restore reapplies later
   deletions before saved context is available again. The README, tool reference
   and `forget_my_context` contract say the same; the contract is re-exported
-  from monorepo `8c35bbf`.
+  from monorepo `b873973`.
 - `recommend_cards` follows the server's `card-qualitative-v2` method
   (monorepo #3545). Recognized but unassessed goals sent beside a supported
   goal are listed in `unassessedGoals` instead of blocking the answer. A stated
