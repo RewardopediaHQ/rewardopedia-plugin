@@ -187,6 +187,11 @@ DELETION_GUIDES = (
 )
 RETENTION_CONTACT = "info@rewardopedia.com"
 UNPUBLISHED_RETENTION = ("disclosed retention", "before release")
+# Owner decision, monorepo #3544. The three user-facing guides say this together.
+APPROVED_BACKUP_DISCLOSURE = (
+    "Deletion from Rewardopedia is immediate; provider backup copies roll off "
+    "automatically within about 8 days"
+)
 
 
 def check_deletion_guidance(root: Path) -> list[Finding]:
@@ -214,6 +219,15 @@ def check_deletion_guidance(root: Path) -> list[Finding]:
                         f"must not promise an unpublished retention disclosure ({phrase!r})",
                     )
                 )
+        if APPROVED_BACKUP_DISCLOSURE not in " ".join(text.split()):
+            findings.append(
+                Finding(
+                    CHECK,
+                    relative,
+                    "must state the measured backup disclosure: deletion is immediate and "
+                    "provider backup copies roll off within about 8 days",
+                )
+            )
     return findings
 
 

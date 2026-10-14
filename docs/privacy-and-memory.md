@@ -86,11 +86,11 @@ outcome codes, status and timing, not your inputs or credentials.
 
 ## Backups
 
-Deletion takes effect in the live service. Copies inside service backups are
-not removed immediately: deleted data can remain in backups until they expire.
-The maximum backup retention period and how restores honour deletions have not
-been measured or published yet. For retention questions or to delete your
-Rewardopedia account entirely, email info@rewardopedia.com.
+Deletion from Rewardopedia is immediate; provider backup copies roll off
+automatically within about 8 days (backups are kept for 7 days; measured in
+October 2026 and re-measured whenever backup settings change). For retention
+questions or to delete your Rewardopedia account entirely,
+email info@rewardopedia.com.
 
 ## Permissions you grant
 

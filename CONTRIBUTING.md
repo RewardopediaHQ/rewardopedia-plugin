@@ -89,8 +89,6 @@ are still open:
 - verified rows for all four consumer clients in
   [docs/compatibility.md](docs/compatibility.md);
 - published OAuth client values for the Grok and Perplexity guides;
-- published backup-retention limits and account-deletion instructions in the
-  [privacy guide](docs/privacy-and-memory.md);
 - branding: owner-supplied logo and icon files in `assets/`, the terms that
   apply to them, and the matching `logo`, `composerIcon` and `brandColor`
   fields in `plugin.json`. None are included yet.
