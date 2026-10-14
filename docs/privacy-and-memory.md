@@ -100,6 +100,11 @@ email info@rewardopedia.com.
 | `context:read` | Read your saved context and history, and use saved facts in recommendations |
 | `context:write` | Save, correct and delete your context |
 
+ChatGPT is also granted `openid`, `email` and `profile`. Signing in shares your
+name, username, avatar and email address with ChatGPT. The consent screen lists
+them before you approve. Those identity scopes are not granted to other clients
+(owner decision, monorepo #3529).
+
 Recommendations never save or change your facts; only an explicit save does.
 
 You can revoke access at any time by disconnecting Rewardopedia in your

@@ -24,11 +24,10 @@ and how to inspect or delete saved context.
   correcting and deleting context may be unavailable in ChatGPT; this has not
   been tested.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
-- **Sign-in information shared with ChatGPT:** open. ChatGPT requests the
-  OpenID scopes (`openid`, `email`, `profile`) an authorization server
-  advertises. Whether Rewardopedia enables them, which would share your name,
-  username, avatar and email address with ChatGPT, is an owner decision that
-  will be recorded here before release.
+- **Sign-in information shared with ChatGPT:** ChatGPT requests the OpenID
+  scopes (`openid`, `email`, `profile`), and Rewardopedia grants them to
+  ChatGPT. Signing in shares your name, username, avatar and email address
+  with ChatGPT. The sign-in consent screen lists them before you approve.
 - A listing in the ChatGPT plugin directory is a separate, later step and is
   not available yet.
 
@@ -49,7 +48,10 @@ and how to inspect or delete saved context.
 6. Review the risk warning, select **I understand and want to continue**, then
    **Create as a plugin**, and review the tools ChatGPT discovered.
 7. When prompted, sign in to Rewardopedia and review the requested
-   permissions: `cards:read`, `context:read` and `context:write`.
+   permissions: `openid`, `email` and `profile`, plus `cards:read`,
+   `context:read` and `context:write`. Signing in shares your name, username,
+   avatar and email address with ChatGPT. The consent screen lists them
+   before you approve.
 8. Start a new chat, type `@` in the prompt box and select Rewardopedia.
 
 ## Try it

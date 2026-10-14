@@ -13,7 +13,7 @@ SHA-256 of the vendored files:
 ```text
 0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883  agent-plugins-1.0.0/plugin.schema.json
 6539175bfcdf43085855183e86da40ea94b166547a72b47ae9a0a390516d3acb  agent-plugins-1.0.0/mcp.schema.json
-35422f035f7cd5445bbe2f57ca20650ef9146828eb4549d4f850876c11697aa5  rewardopedia-mcp/tools.json
+db4840e56de05bc0fc00e876a5ac080a52406c8d06248d8782b153de82cf9050  rewardopedia-mcp/tools.json
 ```
 
 The validator checks these hashes. To update, download the new upstream files,

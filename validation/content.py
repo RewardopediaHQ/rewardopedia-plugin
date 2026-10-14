@@ -267,6 +267,61 @@ def check_spanish_forget_disclosure(root: Path) -> list[Finding]:
     return findings
 
 
+# Owner decision, monorepo #3529 (2026-10-10). Identity scopes are ChatGPT only.
+CHATGPT_IDENTITY_SCOPES = "`openid`, `email` and `profile`"
+CHATGPT_IDENTITY_SHARING = (
+    "Signing in shares your name, username, avatar and email address with ChatGPT."
+)
+CHATGPT_IDENTITY_DOCS = (
+    "docs/clients/chatgpt.md",
+    "README.md",
+    "docs/privacy-and-memory.md",
+    "CHANGELOG.md",
+)
+CHATGPT_COMPATIBILITY = "docs/compatibility.md"
+OPEN_SCOPE_DECISION = "open owner decision"
+
+
+def check_chatgpt_identity_scopes(root: Path) -> list[Finding]:
+    """ChatGPT's approved identity grant is stated, and is not left as an open decision."""
+    findings: list[Finding] = []
+    for relative in (*CHATGPT_IDENTITY_DOCS, CHATGPT_COMPATIBILITY):
+        text = read_text(root, relative)
+        if text is None:
+            findings.append(
+                Finding(CHECK, relative, "ChatGPT identity-scope disclosure is missing")
+            )
+            continue
+        collapsed = " ".join(text.split())
+        if relative in CHATGPT_IDENTITY_DOCS:
+            if CHATGPT_IDENTITY_SCOPES not in text:
+                findings.append(
+                    Finding(
+                        CHECK,
+                        relative,
+                        f"must name ChatGPT's identity scopes {CHATGPT_IDENTITY_SCOPES}",
+                    )
+                )
+            if CHATGPT_IDENTITY_SHARING not in collapsed:
+                findings.append(
+                    Finding(
+                        CHECK,
+                        relative,
+                        "must state that signing in shares your name, username, avatar and "
+                        "email address with ChatGPT",
+                    )
+                )
+        if OPEN_SCOPE_DECISION in text:
+            findings.append(
+                Finding(
+                    CHECK,
+                    relative,
+                    f"must not call ChatGPT's identity-scope grant an {OPEN_SCOPE_DECISION}",
+                )
+            )
+    return findings
+
+
 def check_readme(root: Path) -> list[Finding]:
     text = read_text(root, "README.md")
     if text is None:
@@ -363,6 +418,7 @@ def check(root: Path) -> list[Finding]:
         *check_readme(root),
         *check_deletion_guidance(root),
         *check_spanish_forget_disclosure(root),
+        *check_chatgpt_identity_scopes(root),
         *check_examples_synthetic(root),
         *check_examples_notice(root),
     ]

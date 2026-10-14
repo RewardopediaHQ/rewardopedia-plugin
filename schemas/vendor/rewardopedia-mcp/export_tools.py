@@ -43,7 +43,7 @@ async def main(commit: str) -> None:
             }
         )
     json.dump(
-        {"source": "MehdiZare/rewardopedia-mono-repo", "commit": commit, "tools": tools},
+        {"source": "RewardopediaHQ/rewardopedia-mono-repo", "commit": commit, "tools": tools},
         sys.stdout,
         indent=2,
         sort_keys=True,
