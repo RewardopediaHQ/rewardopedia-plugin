@@ -18,9 +18,9 @@ and how to inspect or delete saved context.
   help center says full MCP support, including write actions, is for
   Business, Enterprise and Edu workspaces, where admins and owners control
   developer mode, and that Pro users can connect MCP servers with read/fetch
-  permissions in developer mode. If your plan only allows read/fetch, saving,
-  correcting and deleting context may be unavailable in ChatGPT; this has not
-  been tested.
+  permissions in developer mode. Every Rewardopedia card tool records sanitized request history. A
+  read/fetch-only client cannot qualify for this flow; verify current plan
+  support before connecting.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
 - **Sign-in information shared with ChatGPT:** ChatGPT requests the OpenID
   scopes (`openid`, `email`, `profile`), and Rewardopedia grants them to
