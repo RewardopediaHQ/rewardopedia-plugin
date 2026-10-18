@@ -3,12 +3,15 @@
 A client is **Verified** only after a real, signed-in Rewardopedia account
 completes actual tool calls on the listed surface against the deployed
 service, with the build and package version recorded as evidence. Protocol
-handshakes, API-only calls, developer surfaces and documentation are not
+handshakes, API-only calls, package loading and documentation are not
 verification. Every other surface is **Unverified**.
 
-The Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not live
-yet, so no surface has been verified. Prerequisites below were last rechecked
-against official documentation on 2026-10-10.
+The service is deployed; `/ready` returned 200 with eleven tools on 2026-10-18.
+This proves reachability, not any client's functional acceptance. Shared backend
+gates plus the first independently verified surface can release; other clients
+remain open. A client-specific OAuth or directory delay does not block a
+qualified sibling. Prerequisite claims below require recheck at execution;
+packaging/publication routes were rechecked on 2026-10-18.
 
 ## Consumer surfaces
 
@@ -24,16 +27,17 @@ against official documentation on 2026-10-10.
 These package formats are validated in CI. On 2026-09-27 a local installation
 from a checkout loaded the skill and the `rewardopedia` MCP server entry in
 Claude Code 2.1.283, and Codex CLI 0.156.1 installed the plugin and listed the
-server entry. Signing in from these surfaces is not supported for version
-0.1.0, because Rewardopedia accepts only the pre-registered claude.ai and
-ChatGPT web OAuth clients. Developer surfaces never count toward consumer
-verification.
+server entry. Each developer surface needs its own approved OAuth registration
+and complete functional acceptance. Package loading alone does not qualify any
+surface. A verified developer surface can release independently of the web client.
 
 | Client | Tested surface | Account prerequisites | Status | Verification date | Evidence |
 | --- | --- | --- | --- | --- | --- |
-| [Claude Code](clients/claude.md#developer-surface-claude-code) | none yet (target: plugin from this repository's marketplace) | Claude Code; Rewardopedia account; sign-in not supported for 0.1.0 | Unverified | not yet verified | none |
-| [Codex and ChatGPT desktop](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | Codex or the ChatGPT desktop app; Rewardopedia account; sign-in not supported for 0.1.0 | Unverified | not yet verified | none |
-| [Grok Build](clients/grok.md#developer-surface-grok-build) | none yet (target: Claude Code-compatible plugin) | Grok Build; Rewardopedia account; sign-in not supported for 0.1.0 | Unverified | not yet verified | none |
+| [Claude Code](clients/claude.md#developer-surface-claude-code) | none yet (target: plugin from this repository's marketplace) | Claude Code; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [Codex](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | Codex; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [ChatGPT desktop](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | ChatGPT desktop; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [Grok Build](clients/grok.md#developer-surface-grok-build) | none yet (target: Claude Code-compatible plugin) | Grok Build; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [Cursor](clients/cursor.md) | none yet (target: portable Agent Plugin) | Cursor account and plugin support; approved OAuth registration; Rewardopedia account | Unverified | not yet verified | none |
 
 ## Recording a verification
 
@@ -44,7 +48,9 @@ the evidence:
 - **Status:** `Verified`.
 - **Verification date:** the ISO date of the test run (`YYYY-MM-DD`).
 - **Evidence:** a link to sanitized evidence that records the deployed build,
-  package version, account prerequisite and the successful tool calls. Never
+  package version, account prerequisite and the successful tool calls in both
+  US languages. Include context correction/deletion, two-account isolation,
+  source/date links and relevant refusal/reconnect/outage behavior. Never
   include tokens, account identifiers or personal data.
 
 CI rejects a `Verified` row without an ISO date and an evidence link, and any

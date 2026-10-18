@@ -1,10 +1,10 @@
 # Rewardopedia plugin
 
-> [!WARNING]
-> **NOT YET LIVE.** The Rewardopedia MCP server at
-> `https://mcp.rewardopedia.com/mcp` has not launched. Nothing in this
-> repository works yet, no client has been verified, and nothing has been
-> released. The package version is `0.1.0-dev`.
+> [!NOTE]
+> The MCP service is deployed; public `/ready` returned 200 with eleven tools
+> on 2026-10-18. Functional client qualification and a stable package release
+> are still pending. This package remains `0.1.0-dev`; see the
+> [compatibility table](docs/compatibility.md).
 
 This repository is the public, MIT-licensed package that connects AI
 assistants to Rewardopedia's remote MCP server at
@@ -16,7 +16,7 @@ your Rewardopedia account.
 It contains manifests, an assistant skill, client setup guides, synthetic
 examples and validation. It contains no server code and no customer data.
 
-## What it will do
+## What the service provides
 
 The server exposes eleven tools, documented in the
 [tool reference](skills/card-recommendations/references/tools.md):
@@ -92,6 +92,7 @@ All guides are **unverified** until each client passes a live test; see the
 | Claude | [Claude setup](docs/clients/claude.md) | Unverified |
 | Grok | [Grok setup](docs/clients/grok.md) | Unverified |
 | Perplexity | [Perplexity setup](docs/clients/perplexity.md) | Unverified |
+| Cursor | [Cursor setup](docs/clients/cursor.md) | Unverified |
 
 The packaging formats and client steps are based on official documentation
 listed in [docs/sources.md](docs/sources.md).
@@ -135,3 +136,5 @@ npx --yes @anthropic-ai/claude-code@2.1.283 plugin validate --strict .claude-plu
 - [Security policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)
 - [MIT License](LICENSE)
+
+Distribution status and review packets: [distribution checklist](docs/distribution.md).

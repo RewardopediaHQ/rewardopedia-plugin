@@ -1,10 +1,8 @@
 # Connect Rewardopedia to Grok
 
-**Status: unverified.** No Rewardopedia connection has been tested in Grok, and
-the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not live
-yet. These steps come from xAI's documentation (rechecked 2026-10-10) and will
-be confirmed or corrected when the service launches. See the
-[compatibility table](../compatibility.md).
+**Status: unverified.** The service is deployed, but functional acceptance
+on this surface is pending. Setup steps must be checked against the current
+client UI and OAuth prerequisites. See the [compatibility table](../compatibility.md).
 
 ## Before you connect
 
@@ -62,9 +60,9 @@ and how to inspect or delete saved context.
 
 xAI documents that Grok Build reads Claude Code plugins and marketplaces, so
 this repository's `.claude-plugin/` manifests and `.mcp.json` may load there.
-Signing in to Rewardopedia from Grok Build is not supported for version 0.1.0,
-because its OAuth client is not pre-registered. This has not been tested and
-does not count as consumer Grok verification.
+Grok Build requires its own verified OAuth prerequisites and fresh installation.
+Its client is not currently qualified. A marketplace-source installation does
+not establish public catalog placement or Grok web compatibility.
 
 ## Sources
 

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from .lifecycle import cut_release, launch_service, start_next_cycle, verify_client
+from .test_release import accept_backend
 
 NESTED = "REWARDOPEDIA_LIFECYCLE_RUN"
 
@@ -33,7 +34,9 @@ def record_verification(root: Path) -> str:
 def launch_and_tag_release(root: Path) -> str:
     launch_service(root)
     verify_client(root, "ChatGPT")
-    return cut_release(root)
+    ref = cut_release(root)
+    accept_backend(root)
+    return ref
 
 
 def start_development_after_release(root: Path) -> str:

@@ -81,17 +81,27 @@ in the same pull request.
 
 ### Before v0.1.0
 
-`v0.1.0` waits for the live service and verified client acceptance. These items
-are still open:
+`v0.1.0` requires the deployed service, accepted shared backend gates and at
+least one independently verified surface. Other client rows stay explicitly
+unverified and do not block that release. Do not copy evidence between web,
+desktop, CLI or IDE surfaces.
 
-- the live service at `https://mcp.rewardopedia.com/mcp` (see
-  [Launching the service](#launching-the-service));
-- verified rows for all four consumer clients in
-  [docs/compatibility.md](docs/compatibility.md);
-- published OAuth client values for the Grok and Perplexity guides;
-- branding: owner-supplied logo and icon files in `assets/`, the terms that
-  apply to them, and the matching `logo`, `composerIcon` and `brandColor`
-  fields in `plugin.json`. None are included yet.
+Record the version, deployed commit, verification date and public sanitized
+shared-gate evidence in `release-readiness.json`. The `release` validator refuses
+a stable/tagged build without that evidence and a verified compatibility row.
+Shared acceptance covers qualified data, load, publication revocation, privacy,
+account isolation, admin authorization, quotas and failure/recovery behavior.
+Client acceptance includes fresh installation, OAuth, useful source-backed
+answers in both US languages, context inspection/correction/deletion and failures.
+Prove cross-client reuse when a second surface qualifies.
+
+Metadata includes the existing site icon and five positive/three negative review
+cases. They are review plans, not test results. Before OpenAI submission, provide
+a real reviewer-accessible demo recording and secure dashboard reviewer access;
+never put credentials in the package. Verify client-specific OAuth registrations,
+platform validation and actual listing routes. Submission, approval, live listing
+and successful installation are separate states. A release or submission still
+requires its execution approval; passing CI does not publish a marketplace listing.
 
 ## Updating vendored schemas
 

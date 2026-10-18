@@ -6,6 +6,12 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Separate deployed-service status from functional client qualification and stable release.
+- Qualify clients independently after shared gates; add Cursor and platform distribution guidance.
+- Add public review metadata, existing brand icon, synthetic review cases and release evidence checks.
+
 ### Added
 
 - Portable Agent Plugins manifest (`plugin.json`, `mcp.json`) with OpenAI
@@ -87,5 +93,5 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### Not yet included
 
-- Branding (logo, icon and brand colour) awaits owner-supplied assets; see
+- Branding (logo and brand colour) awaits owner-supplied assets; see
   [Before v0.1.0](CONTRIBUTING.md#before-v010).

@@ -1,10 +1,8 @@
 # Connect Rewardopedia to Perplexity
 
-**Status: unverified.** No Rewardopedia connection has been tested in
-Perplexity, and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`)
-is not live yet. These steps come from Perplexity's documentation (rechecked
-2026-10-10) and will be confirmed or corrected when the service launches. See
-the [compatibility table](../compatibility.md).
+**Status: unverified.** The service is deployed, but functional acceptance
+on this surface is pending. Setup steps must be checked against the current
+client UI and OAuth prerequisites. See the [compatibility table](../compatibility.md).
 
 ## Before you connect
 
