@@ -34,7 +34,8 @@ surface. A verified developer surface can release independently of the web clien
 | Client | Tested surface | Account prerequisites | Status | Verification date | Evidence |
 | --- | --- | --- | --- | --- | --- |
 | [Claude Code](clients/claude.md#developer-surface-claude-code) | none yet (target: plugin from this repository's marketplace) | Claude Code; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
-| [Codex and ChatGPT desktop](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | Codex or the ChatGPT desktop app; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [Codex](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | Codex; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
+| [ChatGPT desktop](clients/chatgpt.md#developer-surface-codex-and-the-chatgpt-desktop-app) | none yet (target: portable plugin from a local or repository marketplace) | ChatGPT desktop; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
 | [Grok Build](clients/grok.md#developer-surface-grok-build) | none yet (target: Claude Code-compatible plugin) | Grok Build; Rewardopedia account; OAuth prerequisites and functional acceptance pending | Unverified | not yet verified | none |
 | [Cursor](clients/cursor.md) | none yet (target: portable Agent Plugin) | Cursor account and plugin support; approved OAuth registration; Rewardopedia account | Unverified | not yet verified | none |
 

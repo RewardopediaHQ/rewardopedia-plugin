@@ -71,3 +71,25 @@ def test_review_metadata_refuses_missing_urls_and_invalid_tools(repo: Path) -> N
     found = errors(release.check(repo, "refs/heads/main"))
     assert any("supportURL" in x for x in found)
     assert any("unknown review case tools" in x for x in found)
+
+
+def test_non_object_manifest_is_reported(repo: Path) -> None:
+    write_json(repo, "plugin.json", None)
+    found = errors(release.check(repo, "refs/heads/main"))
+    assert any("manifest must be a JSON object" in x for x in found)
+
+
+def test_non_object_nested_values_are_reported(repo: Path) -> None:
+    edit_json(repo, "plugin.json", lambda data: data.update(extensions="portable"))
+    found = errors(release.check(repo, "refs/heads/main"))
+    assert any("extensions must be a JSON object" in x for x in found)
+    edit_json(
+        repo,
+        "plugin.json",
+        lambda data: data.update(
+            extensions={"com.openai": {"interface": 7, "review": {"test_cases": []}}}
+        ),
+    )
+    found = errors(release.check(repo, "refs/heads/main"))
+    assert any("interface must be a JSON object" in x for x in found)
+    assert any("review.test_cases must be a JSON object" in x for x in found)

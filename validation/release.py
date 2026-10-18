@@ -14,7 +14,7 @@ from .constants import CONSUMER_CLIENTS, SERVICE_LIVE, TOOLS
 
 CHECK = "release"
 READINESS = "release-readiness.json"
-SURFACES = {*CONSUMER_CLIENTS, "Claude Code", "Codex and ChatGPT desktop", "Grok Build"}
+SURFACES = {*CONSUMER_CLIENTS, "Claude Code", "Codex", "ChatGPT desktop", "Grok Build"}
 
 
 def https_url(value: object) -> bool:
@@ -31,11 +31,28 @@ def https_url(value: object) -> bool:
         return False
 
 
+def nested_object(value: object, key: str, path: str, findings: list[Finding]) -> dict:
+    """Return mapping ``value[key]``; a present but non-object value is an error."""
+    if not isinstance(value, dict):
+        return {}
+    child = value.get(key)
+    if child is None:
+        return {}
+    if not isinstance(child, dict):
+        findings.append(Finding(CHECK, "plugin.json", f"{path} must be a JSON object"))
+        return {}
+    return child
+
+
 def check(root: Path, ref: str | None = None) -> list[Finding]:
     manifest, findings = load_json(root, "plugin.json", CHECK)
     if not isinstance(manifest, dict):
+        if not findings:
+            findings.append(Finding(CHECK, "plugin.json", "manifest must be a JSON object"))
         return findings
-    interface = manifest.get("extensions", {}).get("com.openai", {}).get("interface", {})
+    extensions = nested_object(manifest, "extensions", "extensions", findings)
+    openai_ext = nested_object(extensions, "com.openai", "extensions.com.openai", findings)
+    interface = nested_object(openai_ext, "interface", "extensions.com.openai.interface", findings)
     for field in ("displayName", "shortDescription"):
         value = interface.get(field)
         if not isinstance(value, str) or not 1 <= len(value) <= 30:
@@ -52,9 +69,8 @@ def check(root: Path, ref: str | None = None) -> list[Finding]:
             or not (root / value).is_file()
         ):
             findings.append(Finding(CHECK, "plugin.json", f"{field} needs a bundled assets file"))
-    cases = (
-        manifest.get("extensions", {}).get("com.openai", {}).get("review", {}).get("test_cases", {})
-    )
+    review = nested_object(openai_ext, "review", "extensions.com.openai.review", findings)
+    cases = nested_object(review, "test_cases", "extensions.com.openai.review.test_cases", findings)
     for kind, count in (("positive", 5), ("negative", 3)):
         rows = cases.get(kind)
         if not isinstance(rows, list) or len(rows) != count:
