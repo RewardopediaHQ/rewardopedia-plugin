@@ -54,3 +54,18 @@ cutting a release, and update its date when you do.
 | Topic | Source | Retrieved |
 | --- | --- | --- |
 | MCP authorization | [modelcontextprotocol.io authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) | 2026-09-27 |
+
+## Independent distribution routes (checked 2026-10-18)
+
+- [OpenAI submission metadata and review cases](https://developers.openai.com/plugins/deploy/submission)
+- [Cursor portable plugins](https://cursor.com/docs/reference/plugins)
+- [Claude plugin submission](https://claude.com/resources/articles/build-plugins-for-claude)
+- [Grok Build plugins and marketplaces](https://docs.x.ai/build/features/skills-plugins-marketplaces)
+- [Official MCP Registry](https://modelcontextprotocol.io/registry/quickstart)
+- [Smithery publication](https://smithery.ai/docs/build/publish)
+- [Glama server directory](https://glama.ai/mcp/servers)
+
+Each route needs a versioned packet, current ownership/OAuth prerequisites and
+its own submission/approval/listing/installation evidence. Grok Build source
+installation does not imply a central public catalog listing. No listing or
+functional client acceptance is claimed by these references.

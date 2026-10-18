@@ -1,10 +1,8 @@
 # Connect Rewardopedia to Claude
 
-**Status: unverified.** No Rewardopedia connection has been tested in Claude,
-and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not
-live yet. These steps come from Anthropic's documentation (rechecked
-2026-10-10) and will be confirmed or corrected when the service launches. See
-the [compatibility table](../compatibility.md).
+**Status: unverified.** The service is deployed, but functional acceptance
+on this surface is pending. Setup steps must be checked against the current
+client UI and OAuth prerequisites. See the [compatibility table](../compatibility.md).
 
 ## Before you connect
 
@@ -82,11 +80,9 @@ claude plugin marketplace add RewardopediaHQ/rewardopedia-plugin
 claude plugin install rewardopedia@rewardopedia
 ```
 
-Signing in to Rewardopedia from Claude Code is not supported for version
-0.1.0: Rewardopedia accepts only the pre-registered claude.ai and ChatGPT web
-clients and turns off automatic registration, so Claude Code's own client is
-expected to be refused at sign-in. Developer surfaces do not count as consumer
-Claude verification.
+Claude Code requires its own approved OAuth registration; current web-client
+registration is not proof of access. Qualification is independent of claude.ai.
+Package loading alone is not functional acceptance.
 
 ## Sources
 

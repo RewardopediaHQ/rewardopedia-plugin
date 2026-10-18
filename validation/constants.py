@@ -9,10 +9,9 @@ CANONICAL_ENDPOINT = f"https://{SERVICE_HOST}/mcp"
 # Rewardopedia's own domain; any other host naming Rewardopedia is a lookalike.
 BRAND_DOMAIN = "rewardopedia.com"
 
-# Set to True in the launch pull request that removes the README's NOT YET LIVE
-# banner (see CONTRIBUTING.md). While False, the README must carry the banner
-# and external link checks skip the not-yet-reachable service host.
-SERVICE_LIVE = False
+# Deployment reachability only, not functional client acceptance or public release.
+# /ready returned 200 with eleven tools on 2026-10-18.
+SERVICE_LIVE = True
 
 REPOSITORY_URL = "https://github.com/RewardopediaHQ/rewardopedia-plugin"
 LICENSE_ID = "MIT"
@@ -42,8 +41,9 @@ MARKETPLACE = ".claude-plugin/marketplace.json"
 NOT_YET_LIVE_HOSTS: frozenset[str] = frozenset() if SERVICE_LIVE else frozenset({SERVICE_HOST})
 
 # Consumer clients that must each have a guide and a compatibility row.
-CONSUMER_CLIENTS = ("ChatGPT", "Claude", "Grok", "Perplexity")
+CONSUMER_CLIENTS = ("ChatGPT", "Claude", "Grok", "Perplexity", "Cursor")
 CLIENT_GUIDES = {
+    "Cursor": "docs/clients/cursor.md",
     "ChatGPT": "docs/clients/chatgpt.md",
     "Claude": "docs/clients/claude.md",
     "Grok": "docs/clients/grok.md",

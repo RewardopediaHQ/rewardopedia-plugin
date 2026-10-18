@@ -1,10 +1,8 @@
 # Connect Rewardopedia to ChatGPT
 
-**Status: unverified.** No Rewardopedia connection has been tested in ChatGPT,
-and the Rewardopedia MCP server (`https://mcp.rewardopedia.com/mcp`) is not
-live yet. These steps come from OpenAI's documentation (rechecked 2026-10-10)
-and will be confirmed or corrected when the service launches. See the
-[compatibility table](../compatibility.md).
+**Status: unverified.** The service is deployed, but functional acceptance
+on this surface is pending. Setup steps must be checked against the current
+client UI and OAuth prerequisites. See the [compatibility table](../compatibility.md).
 
 ## Before you connect
 
@@ -73,11 +71,9 @@ and how to inspect or delete saved context.
 
 This repository's root `plugin.json` and `mcp.json` follow OpenAI's portable
 plugin layout. On 2026-09-27 a local Codex CLI installation from a checkout
-listed the plugin and its MCP server entry. Signing in from Codex or the
-ChatGPT desktop app is not supported for version 0.1.0: Rewardopedia accepts
-only the pre-registered ChatGPT web and Claude clients, so these surfaces are
-expected to be refused at sign-in. Developer surfaces do not count as consumer
-ChatGPT verification.
+listed the plugin and its MCP server entry. Codex and ChatGPT desktop each require approved OAuth prerequisites and
+actual tool-call evidence. Current web-client registration is not proof of
+access. They qualify independently; package loading alone does not qualify ChatGPT web.
 
 ## Sources
 

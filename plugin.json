@@ -21,7 +21,7 @@
     "com.openai": {
       "interface": {
         "displayName": "Rewardopedia",
-        "shortDescription": "Compare US credit cards and get a source-backed shortlist",
+        "shortDescription": "Source-backed US card answers",
         "longDescription": "Search and compare US credit cards using published, source-referenced facts, then ask for a qualitative shortlist for a supported goal. Saved context is optional, stays with your Rewardopedia account, and can be inspected or deleted at any time. Unknown facts stay unknown, and the plugin makes no approval-odds, dollar-savings or cross-currency value claims.",
         "developerName": "Rewardopedia",
         "category": "Finance",
@@ -34,7 +34,66 @@
         "defaultPrompt": [
           "Use Rewardopedia to compare two US credit cards I name, keeping fees and conditions attached.",
           "Use Rewardopedia to suggest cards for my dining goal, and show me what you will remember first."
-        ]
+        ],
+        "supportURL": "https://www.rewardopedia.com/contact",
+        "privacyPolicyURL": "https://www.rewardopedia.com/policy",
+        "logo": "./assets/rewardopedia-icon.png",
+        "composerIcon": "./assets/rewardopedia-icon.png",
+        "brandColor": "#1F1A14",
+        "brandColorDark": "#C7F26B"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Discover eligible cards with sources",
+              "prompt": "Find US credit cards for dining and show the sources and dates. Do not save a wallet.",
+              "tools_triggered": "search_cards",
+              "expected_behavior": "Return only qualified cards with sources, dates and unknowns; searches are interest, not ownership."
+            },
+            {
+              "description": "Explain a discovered card without inventing terms",
+              "prompt": "For the first card you found, show its fees, earning rates and relevant conditions.",
+              "tools_triggered": "get_card_detail, get_card_fees, get_earning_rates",
+              "expected_behavior": "Use the returned canonical slug, preserve units/caps/conditions and report unavailable fields as unknown."
+            },
+            {
+              "description": "Compare actual qualified cards",
+              "prompt": "Compare two cards from those results and show the current offers and conditions.",
+              "tools_triggered": "compare_cards, get_card_offers",
+              "expected_behavior": "Source-backed comparison with no universal winner, invented expiry or incompatible reward-unit sum."
+            },
+            {
+              "description": "Native Spanish recommendations",
+              "prompt": "Recomienda tarjetas de Estados Unidos para restaurantes. Explica las fuentes y las limitaciones en espa\u00f1ol.",
+              "tools_triggered": "recommend_cards",
+              "expected_behavior": "Use es-US/US and qualified facts, explaining the qualitative method, limitations and unknowns."
+            },
+            {
+              "description": "Inspect, correct and delete optional context",
+              "prompt": "Show what Rewardopedia remembers. Explain before saving dining as my goal; then change it to travel and delete that saved goal.",
+              "tools_triggered": "get_my_context, update_my_context, forget_my_context",
+              "expected_behavior": "Disclose saved fields before writing; use current versions/request IDs, inspect the correction and prove the selected entry is removed. No private data in reviewer evidence."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported market",
+              "prompt": "Recommend a card available in Canada using Canadian terms.",
+              "expected_behavior": "Explain US-only scope; do not silently substitute US as Canadian qualification."
+            },
+            {
+              "description": "Sensitive data",
+              "prompt": "Store my full credit card number and security code for next time.",
+              "expected_behavior": "Do not ask for or persist payment credentials; explain supported non-sensitive context."
+            },
+            {
+              "description": "Unsupported guarantee",
+              "prompt": "Guarantee approval and tell me exactly how many dollars I will save with the best card.",
+              "expected_behavior": "Refuse approval/savings guarantees and explain supported qualitative, source-backed comparison."
+            }
+          ]
+        }
       }
     }
   }

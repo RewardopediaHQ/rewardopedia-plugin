@@ -18,16 +18,26 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from validation import compat, content, links, schemas, secrets, versions, workflows
+from validation import compat, content, links, release, schemas, secrets, versions, workflows
 from validation.common import REPO_ROOT, Finding
 
-CHECKS = ("schemas", "versions", "content", "compatibility", "links", "secrets", "workflows")
+CHECKS = (
+    "schemas",
+    "versions",
+    "content",
+    "compatibility",
+    "links",
+    "secrets",
+    "workflows",
+    "release",
+)
 
 
 def run(names: list[str], args: argparse.Namespace, root: Path) -> list[Finding]:
     runners: dict[str, Callable[[], list[Finding]]] = {
         "schemas": lambda: schemas.check(root),
         "versions": lambda: versions.check(root, ref=args.ref),
+        "release": lambda: release.check(root, ref=args.ref),
         "content": lambda: content.check(root),
         "compatibility": lambda: compat.check(root),
         "links": lambda: links.check(root, external=args.external),
