@@ -53,14 +53,14 @@
             },
             {
               "description": "Explain a discovered card without inventing terms",
-              "prompt": "For the first card you found, show its fees, earning rates and relevant conditions.",
-              "tools_triggered": "get_card_detail, get_card_fees, get_earning_rates",
+              "prompt": "Find a US dining card, then show its fees, earning rates and relevant conditions using its returned identity.",
+              "tools_triggered": "search_cards, get_card_detail, get_card_fees, get_earning_rates",
               "expected_behavior": "Use the returned canonical slug, preserve units/caps/conditions and report unavailable fields as unknown."
             },
             {
               "description": "Compare actual qualified cards",
-              "prompt": "Compare two cards from those results and show the current offers and conditions.",
-              "tools_triggered": "compare_cards, get_card_offers",
+              "prompt": "Find two qualified US cards, compare them and show their current offers and conditions.",
+              "tools_triggered": "search_cards, compare_cards, get_card_offers",
               "expected_behavior": "Source-backed comparison with no universal winner, invented expiry or incompatible reward-unit sum."
             },
             {
