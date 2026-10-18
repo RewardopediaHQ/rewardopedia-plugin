@@ -6,6 +6,7 @@ import os
 import re
 from datetime import date
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlsplit
 
 from . import compat
@@ -31,7 +32,7 @@ def https_url(value: object) -> bool:
         return False
 
 
-def nested_object(value: object, key: str, path: str, findings: list[Finding]) -> dict:
+def nested_object(value: object, key: str, path: str, findings: list[Finding]) -> dict[str, Any]:
     """Return mapping ``value[key]``; a present but non-object value is an error."""
     if not isinstance(value, dict):
         return {}
