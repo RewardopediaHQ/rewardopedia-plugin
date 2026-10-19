@@ -12,15 +12,14 @@ and how to inspect or delete saved context.
 
 ## Surface and account prerequisites
 
-- **Surface:** ChatGPT on the web (`chatgpt.com`) using a developer-mode
-  custom MCP server.
-- **Account:** a ChatGPT account where developer mode is available. OpenAI's
-  help center says full MCP support, including write actions, is for
-  Business, Enterprise and Edu workspaces, where admins and owners control
-  developer mode, and that Pro users can connect MCP servers with read/fetch
-  permissions in developer mode. Every Rewardopedia card tool records sanitized request history. A
-  read/fetch-only client cannot qualify for this flow; verify current plan
-  support before connecting.
+- **Surface:** ChatGPT on the web (`chatgpt.com`) using a custom MCP server
+  from Plugins.
+- **Account:** a workspace that permits custom MCP connections and write
+  actions. OpenAI documents full MCP for Business and Enterprise/Edu; Business
+  requires an admin or owner, while Enterprise/Edu can authorize members through
+  RBAC. Pro has read/fetch access only. Every Rewardopedia card tool records
+  sanitized request history, so a read/fetch-only connection cannot qualify the
+  complete flow. Verify the actual workspace permissions before connecting.
 - **Rewardopedia:** a Rewardopedia account to sign in with during OAuth.
 - **Sign-in information shared with ChatGPT:** ChatGPT requests the OpenID
   scopes (`openid`, `email`, `profile`), and Rewardopedia grants them to
@@ -31,10 +30,9 @@ and how to inspect or delete saved context.
 
 ## Connect
 
-1. Turn on developer mode in **Settings > Apps > Advanced settings**. On
-   Business, Enterprise and Edu workspaces an admin or owner must allow it
-   first (Business: **Workspace settings > Permissions & roles**; Enterprise
-   and Edu can also grant it to selected members).
+1. Check your workspace's **Create plugins with MCPs** permission. The current
+   Plugins flow does not require turning on Developer Mode; each server has its
+   own risk acknowledgment. Legacy Apps screens may differ.
 2. Go to [ChatGPT Plugins](https://chatgpt.com/plugins), select the plus
    button, then **Add custom MCP server**.
 3. Enter the name `Rewardopedia` and a short description.
@@ -69,15 +67,44 @@ and how to inspect or delete saved context.
 
 ## Developer surface: Codex and the ChatGPT desktop app
 
-This repository's root `plugin.json` and `mcp.json` follow OpenAI's portable
-plugin layout. On 2026-09-27 a local Codex CLI installation from a checkout
-listed the plugin and its MCP server entry. Codex and ChatGPT desktop each require approved OAuth prerequisites and
-actual tool-call evidence. Current web-client registration is not proof of
-access. They qualify independently; package loading alone does not qualify ChatGPT web.
+This repository's root `plugin.json` and `mcp.json` carry the portable plugin.
+A historical Codex package-loading check on 2026-09-27 did not establish OAuth
+or useful tool calls. Codex CLI, Codex desktop and ChatGPT desktop remain
+independently unverified.
+
+For a direct Codex CLI MCP connection, first read the privacy guide above, then:
+
+```bash
+codex mcp add rewardopedia --url https://mcp.rewardopedia.com/mcp
+codex mcp login rewardopedia
+```
+
+If adding the server already completes OAuth, the separate login is unnecessary.
+These command options were checked in local CLI `0.163.0` on 2026-10-19; no
+Rewardopedia login or client qualification was performed by that check.
+
+Codex supports CIMD and can select it from the authorization server's advertised
+capabilities. Rewardopedia advertises CIMD and issuer-bound responses, but
+admission of the actual Codex client is still unverified. Review the displayed
+Rewardopedia consent before approving it. Do not reuse ChatGPT web's client ID
+or callback for Codex. If admission fails, retain only a sanitized error and ask
+Rewardopedia support to verify that client's registration. Any pre-registered
+fallback must use the exact callback shown by the installed CLI.
+
+In a fresh Codex conversation, exercise the card and context examples above in
+both US languages. Record the app version, deployed build, tool arguments and
+sanitized results. A direct MCP connection tests the server; separately verify
+installation of the portable package and its skill before claiming plugin
+compatibility. Public stable-release and directory availability remain pending.
+
+Both surfaces require source/date links, context reuse/correction/deletion,
+two-account isolation, reconnect and failure evidence before their compatibility
+row can change. Signing in on ChatGPT web does not qualify Codex or a desktop app.
 
 ## Sources
 
 - [Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt)
 - [Authentication](https://developers.openai.com/plugins/build/auth)
 - [Package your plugin](https://developers.openai.com/plugins/build/plugins)
-- [OpenAI Help Center: Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt)
+- [OpenAI Help Center: Connecting custom MCP servers](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt)
+- [Codex MCP configuration and OAuth](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)

@@ -8,6 +8,9 @@ follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Refresh ChatGPT Plugins setup and workspace permissions; document Codex MCP
+  login and its independent OAuth/functional acceptance requirements.
+
 - Separate deployed-service status from functional client qualification and stable release.
 - Qualify clients independently after shared gates; add Cursor and platform distribution guidance.
 - Add public review metadata, existing brand icon, synthetic review cases and release evidence checks.
