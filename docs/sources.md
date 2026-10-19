@@ -20,9 +20,10 @@ cutting a release, and update its date when you do.
 | --- | --- | --- | --- |
 | Package your plugin | [developers.openai.com/plugins/build/plugins](https://developers.openai.com/plugins/build/plugins) | 2026-10-10 | Portable root manifest with `extensions.com.openai.interface`; root `mcp.json` |
 | Authentication | [developers.openai.com/plugins/build/auth](https://developers.openai.com/plugins/build/auth) | 2026-10-10 | OAuth 2.1 with PKCE `S256`, protected-resource metadata, CIMD client registration, default OpenID scope requests |
-| Connect and test | [developers.openai.com/plugins/deploy/connect-chatgpt](https://developers.openai.com/plugins/deploy/connect-chatgpt) | 2026-10-10 | **Add custom MCP server** and **Create as a plugin** steps at `chatgpt.com/plugins` |
+| Connect and test | [developers.openai.com/plugins/deploy/connect-chatgpt](https://developers.openai.com/plugins/deploy/connect-chatgpt) | 2026-10-19 | **Add custom MCP server** and **Create as a plugin** steps at `chatgpt.com/plugins` |
 | Build skills | [developers.openai.com/plugins/build/skills](https://developers.openai.com/plugins/build/skills) | 2026-09-27 | Provider-neutral skill instructions |
-| Developer mode availability | [OpenAI Help Center: Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt) | 2026-10-10 | Plan prerequisites, admin settings and the read/fetch limitation for Pro |
+| Custom MCP connections | [OpenAI Help Center: Connecting custom MCP servers](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt) | 2026-10-19 | Current Plugins flow without a Developer Mode toggle; workspace permissions and Pro read/fetch limits |
+| Codex MCP and OAuth | [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) | 2026-10-19 | Direct HTTP setup, login, CIMD discovery and exact client-specific callback handling; CLI options also checked in local 0.163.0 |
 
 ## Anthropic (Claude)
 
